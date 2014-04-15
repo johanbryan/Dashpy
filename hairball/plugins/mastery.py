@@ -1,4 +1,4 @@
-"""This module provides plugins for basic block statistics."""
+"""This module provides plugins for measuring programming mastery"""
 
 from collections import Counter
 from hairball.plugins import HairballPlugin
@@ -6,7 +6,12 @@ from hairball.plugins import HairballPlugin
 
 class Mastery(HairballPlugin):
 
-    """Plugin that keeps track of how often each block is used."""
+    """
+        Plugin that measures programming mastery of a project
+        in terms of Abstraction, Syncronization, Parallelization,
+        Logic, Flow Control, Data representation and
+        User Interactivity.
+    """
 
     def __init__(self):
         super(Mastery, self).__init__()
@@ -14,7 +19,7 @@ class Mastery(HairballPlugin):
         self.concepts = {} # CT concepts or capabilities
 
     def finalize(self):
-        """Output the aggregate block count results."""
+        """Output the overall programming competence"""
         print self.concepts
         total = 0
         for i in self.concepts.items():
@@ -29,7 +34,7 @@ class Mastery(HairballPlugin):
         else:
             print "Overall programming competence: Basic"
     def analyze(self, scratch):
-        """Run and return the results from the BlockCounts plugin."""
+        """Run and return the results from the Mastery plugin."""
         file_blocks = Counter()
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
