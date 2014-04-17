@@ -141,7 +141,7 @@ class Mastery(HairballPlugin):
         else:
             if file_blocks['when @greenFlag clicked']:
                 score = 1
-        self.concepts['DataRepresentation'] = score
+        self.concepts['UserInteractivity'] = score
         
         
     def logic (self, file_blocks):
