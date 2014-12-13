@@ -32,8 +32,9 @@ class DuplicateScripts(HairballPlugin):
                 blocks_tuple = tuple(blocks_list)
                 if blocks_tuple in scripts_set:
                     if len(blocks_list)>5:
-                        self.total_duplicate += 1
-                        self.list_duplicate.append(blocks_list)
+			if not blocks_list in self.list_duplicate:
+                            self.total_duplicate += 1
+                            self.list_duplicate.append(blocks_list)
                 else:
                     scripts_set.add(blocks_tuple)
 
