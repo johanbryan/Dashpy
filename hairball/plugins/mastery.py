@@ -53,7 +53,6 @@ class Mastery(HairballPlugin):
         """Assign the Syncronization skill result"""
         if (file_blocks["wait until %s"] or 
             file_blocks["when backdrop switches to %s"] or
-            file_blocks["when I start as a clone"] or 
             file_blocks["broadcast %s and wait"]):
             score = 3
         elif (file_blocks["broadcast %s"] or file_blocks["when I receive %s"] or
@@ -79,7 +78,8 @@ class Mastery(HairballPlugin):
     def abstraction(self, file_blocks, scratch):
         """Assign the Abstraction skill result"""
         score = 0
-        if file_blocks["define %s"]:
+        if (file_blocks["define %s"] or
+            file_blocks["when I start as a clone"]):
             score = 3
         elif  (self.count_sprites(scratch) > 1 and 
             ###modificar para ver que ambos objetos tienen scripts
@@ -194,9 +194,10 @@ class Mastery(HairballPlugin):
                 else:
                     multimedia.append(multi)
             # use of clones
-            elif self.script_start_type(script) == self.HAT_CLONE:
-                self.concepts['Parallelization'] = 3
-                return
+            #Se podria comprobar si 2 scripts del mismo personaje comienzan con HAT_CLONE
+            #elif self.script_start_type(script) == self.HAT_CLONE:
+            #    self.concepts['Parallelization'] = 3
+            #    return
             # 2 Scripts start on the same key pressed
             elif self.script_start_type(script) == self.HAT_KEY:
                 key = script.blocks[0].args[0]
