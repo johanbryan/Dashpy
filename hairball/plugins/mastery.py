@@ -78,12 +78,9 @@ class Mastery(HairballPlugin):
     def abstraction(self, file_blocks, scratch):
         """Assign the Abstraction skill result"""
         score = 0
-        if (file_blocks["define %s"] or
-            file_blocks["when I start as a clone"]):
+        if file_blocks["when I start as a clone"]:
             score = 3
-        elif  (self.count_sprites(scratch) > 1 and 
-            ###modificar para ver que ambos objetos tienen scripts
-            sum(self.blocks.values())) > 4: 
+        elif file_blocks["define %s"]: 
             score = 2
         else:
             scripts = 0
