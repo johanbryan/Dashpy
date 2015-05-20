@@ -20,7 +20,11 @@ class HairballPlugin(object):
     HAT_WHEN_I_RECEIVE = 1
     HAT_MOUSE = 2
     HAT_KEY = 3
-    NO_HAT = 4
+    HAT_BACKDROP = 4
+    HAT_MULTIMEDIA = 5
+    HAT_CLONE = 6
+    HAT_DEF = 7
+    NO_HAT = 8
 
     BLOCKMAPPING = {
         'costume': frozenset([('switch backdrop to %s', 'absolute'),
@@ -87,6 +91,15 @@ class HairballPlugin(object):
 
         for sprite in scratch.sprites:
             yield sprite
+    
+    @staticmethod
+    def count_sprites(scratch): ### aniadido por mi
+        """Counts the number of sprites"""
+
+        sprites = 0
+        for sprite in scratch.sprites:
+            sprites += 1
+        return sprites
 
     @staticmethod
     def iter_sprite_scripts(scratch):
@@ -115,6 +128,14 @@ class HairballPlugin(object):
             return HairballPlugin.HAT_MOUSE
         elif script[0].type.text == 'when %s key pressed':
             return HairballPlugin.HAT_KEY
+        elif script[0].type.text == 'when backdrop switches to %s':
+            return HairballPlugin.HAT_BACKDROP
+        elif script[0].type.text == 'when %s > %s':
+            return HairballPlugin.HAT_MULTIMEDIA
+        elif script[0].type.text == 'when I start as a clone':
+            return HairballPlugin.HAT_CLONE
+        elif script[0].type.text == 'define %s':
+            return HairballPlugin.HAT_DEF
         else:
             return HairballPlugin.NO_HAT
 
@@ -134,6 +155,7 @@ class HairballPlugin(object):
                 else:
                     events[block.args[0].lower()] += 1
         return events
+    
 
     @classmethod
     def tag_reachable_scripts(cls, scratch):
