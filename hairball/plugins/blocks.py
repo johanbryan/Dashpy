@@ -51,7 +51,10 @@ class DeadCode(HairballPlugin):
         sprites = {}
         for sprite, script in self.iter_sprite_scripts(scratch):
             if not script.reachable:
-                sprites.setdefault(sprite, []).append(script)
+                blocks_list = []
+                for name, _, _ in self.iter_blocks(script.blocks):
+                    blocks_list.append(name)
+                sprites.setdefault(sprite, []).append(blocks_list)
         if sprites:
             self.dead_code_instances += 1
             import pprint
@@ -63,6 +66,7 @@ class DeadCode(HairballPlugin):
 
     def finalize(self):
         """Output the number of instances that contained dead code."""
+        
         if self.total_instances > 1:
             print('{0} of {1} instances contained dead code.'
                   .format(self.dead_code_instances, self.total_instances))
