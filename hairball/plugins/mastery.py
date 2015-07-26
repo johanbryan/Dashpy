@@ -8,7 +8,7 @@ class Mastery(HairballPlugin):
 
     """
         Plugin that measures programming mastery of a project
-        in terms of Abstraction, Syncronization, Parallelization,
+        in terms of Abstraction, Syncronization, Parallelism,
         Logic, Flow Control, Data representation and
         User Interactivity.
     """
@@ -215,6 +215,7 @@ class Mastery(HairballPlugin):
                     if self.script_start_type(script) == self.HAT_MOUSE:
                         clicked += 1
                     if clicked > 1:
-                        self.concepts['Parallelization'] = 2
-                        return
+                        #self.concepts['Parallelization'] = 2
+                        score = 2
+                        #return
         self.concepts['Parallelization'] = score
