@@ -40,7 +40,7 @@ class Mastery(HairballPlugin):
             for name, _, _ in self.iter_blocks(script.blocks):
                 file_blocks[name] += 1
         self.blocks.update(file_blocks)  # Update the overall count
-        self.flow_control(file_blocks)
+        self.flow_control(file_blocks, scratch)
         self.synchronization(file_blocks)
         self.abstraction(file_blocks, scratch)
         self.data(file_blocks)
@@ -64,15 +64,19 @@ class Mastery(HairballPlugin):
             score = 0
         self.concepts['Synchronization'] = score
     
-    def flow_control(self, file_blocks):
+    def flow_control(self, file_blocks, scratch):
         """Assign the Flow Control skill result"""
+        score = 0
         if file_blocks["repeat until %s%s"]:
             score = 3
         elif (file_blocks["repeat %s%s"] or 
             file_blocks["forever%s"]):
             score = 2
         else: 
-            score = 1 ###check if > 1 blocks in 1 script
+            for script in self.iter_scripts(scratch):
+                if self.count_blocks(script) > 1: 
+                    score = 1
+                    break
         self.concepts['FlowControl'] = score
         
     def abstraction(self, file_blocks, scratch):
