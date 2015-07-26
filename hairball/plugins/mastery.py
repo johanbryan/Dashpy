@@ -205,7 +205,7 @@ class Mastery(HairballPlugin):
             # 2 scripts on green flag
             elif self.script_start_type(script) == self.HAT_GREEN_FLAG:
                 green_flag += 1
-                if score == 0:
+                if green_flag > 1 and score == 0:
                     score = 1
             # Sprite with 2 scripts on clicked
             sprites = list(self.iter_sprites(scratch))
