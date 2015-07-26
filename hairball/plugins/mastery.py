@@ -165,9 +165,10 @@ class Mastery(HairballPlugin):
         multimedia = []
         keys = []
         green_flag = 0
+        num_blocks = 0 # quitar
         for script in all_scripts:
             # 2 Scripts start on the same received message
-            if self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE:
+            if self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE and self.count_blocks(script) > 1:
                 message = script.blocks[0].args[0].lower()
                 if message in messages:
                     self.concepts['Parallelization'] = 3
@@ -175,7 +176,7 @@ class Mastery(HairballPlugin):
                 else:
                     messages.append(message)
             # 2 Scripts start on the same backdrop change
-            elif self.script_start_type(script) == self.HAT_BACKDROP:
+            elif self.script_start_type(script) == self.HAT_BACKDROP and self.count_blocks(script) > 1:
                 backdrop = script.blocks[0].args[0].lower()
                 if backdrop in backdrops:
                     self.concepts['Parallelization'] = 3
@@ -183,7 +184,7 @@ class Mastery(HairballPlugin):
                 else:
                     backdrops.append(backdrop)
             # 2 Scripts start on the same multimedia (video, audio, timer) event
-            elif self.script_start_type(script) == self.HAT_MULTIMEDIA:
+            elif self.script_start_type(script) == self.HAT_MULTIMEDIA and self.count_blocks(script) > 1:
                 multi = script.blocks[0].args[0], script.blocks[0].args[1]
                 if multi in multimedia:
                     self.concepts['Parallelization'] = 3
@@ -196,14 +197,14 @@ class Mastery(HairballPlugin):
             #    self.concepts['Parallelization'] = 3
             #    return
             # 2 Scripts start on the same key pressed
-            elif self.script_start_type(script) == self.HAT_KEY:
+            elif self.script_start_type(script) == self.HAT_KEY and self.count_blocks(script) > 1:
                 key = script.blocks[0].args[0]
                 if key in keys:
                     score = 2
                 else:
                     keys.append(key)
             # 2 scripts on green flag
-            elif self.script_start_type(script) == self.HAT_GREEN_FLAG:
+            elif self.script_start_type(script) == self.HAT_GREEN_FLAG and self.count_blocks(script) > 1:
                 green_flag += 1
                 if green_flag > 1 and score == 0:
                     score = 1
@@ -212,7 +213,7 @@ class Mastery(HairballPlugin):
             for sprite in sprites:
                 clicked = 0
                 for script in sprite.scripts:
-                    if self.script_start_type(script) == self.HAT_MOUSE:
+                    if self.script_start_type(script) == self.HAT_MOUSE and self.count_blocks(script) > 1:
                         clicked += 1
                     if clicked > 1:
                         #self.concepts['Parallelization'] = 2
