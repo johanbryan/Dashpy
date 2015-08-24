@@ -102,6 +102,15 @@ class HairballPlugin(object):
         return sprites
 
     @staticmethod
+    def count_blocks(script): ### aniadido por mi
+        """Counts the number of sprites"""
+
+        blocks = 0
+        for block in script:
+            blocks += 1
+        return blocks
+
+    @staticmethod
     def iter_sprite_scripts(scratch):
         """A generator for all scripts contained in a scratch file.
 
@@ -120,24 +129,24 @@ class HairballPlugin(object):
     @staticmethod
     def script_start_type(script):
         """Return the type of block the script begins with."""
-        if script[0].type.text == 'when @greenFlag clicked':
-            return HairballPlugin.HAT_GREEN_FLAG
-        elif script[0].type.text == 'when I receive %s':
-            return HairballPlugin.HAT_WHEN_I_RECEIVE
-        elif script[0].type.text == 'when this sprite clicked':
-            return HairballPlugin.HAT_MOUSE
-        elif script[0].type.text == 'when %s key pressed':
-            return HairballPlugin.HAT_KEY
-        elif script[0].type.text == 'when backdrop switches to %s':
-            return HairballPlugin.HAT_BACKDROP
-        elif script[0].type.text == 'when %s > %s':
-            return HairballPlugin.HAT_MULTIMEDIA
-        elif script[0].type.text == 'when I start as a clone':
-            return HairballPlugin.HAT_CLONE
-        elif script[0].type.text == 'define %s':
-            return HairballPlugin.HAT_DEF
-        else:
-            return HairballPlugin.NO_HAT
+        if not isinstance(script, kurt.Comment):
+            if script[0].type.text == 'when @greenFlag clicked':
+                return HairballPlugin.HAT_GREEN_FLAG
+            elif script[0].type.text == 'when I receive %s':
+                return HairballPlugin.HAT_WHEN_I_RECEIVE
+            elif script[0].type.text == 'when this sprite clicked':
+                return HairballPlugin.HAT_MOUSE
+            elif script[0].type.text == 'when %s key pressed':
+                return HairballPlugin.HAT_KEY
+            elif script[0].type.text == 'when backdrop switches to %s':
+                return HairballPlugin.HAT_BACKDROP
+            elif script[0].type.text == 'when %s > %s':
+                return HairballPlugin.HAT_MULTIMEDIA
+            elif script[0].type.text == 'when I start as a clone':
+                return HairballPlugin.HAT_CLONE
+            elif script[0].type.text == 'define %s':
+                return HairballPlugin.HAT_DEF
+        return HairballPlugin.NO_HAT
 
     @classmethod
     def get_broadcast_events(cls, script):
