@@ -1,5 +1,6 @@
 """This module provides plugins for checking initialization."""
 
+import kurt
 from hairball.plugins import HairballPlugin
 
 
