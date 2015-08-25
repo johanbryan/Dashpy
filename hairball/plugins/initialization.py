@@ -78,9 +78,10 @@ class AttributeInitialization(HairballPlugin):
             return state
         # Check the other scripts to see if the attribute was ever modified
         for script in other:
-            for name, _, _ in cls.iter_blocks(script.blocks):
-                if name in [x[0] for x in block_set]:
-                    return cls.STATE_MODIFIED
+            if not isinstance(script, kurt.Comment):
+                for name, _, _ in cls.iter_blocks(script.blocks):
+                    if name in [x[0] for x in block_set]:
+                        return cls.STATE_MODIFIED
         return cls.STATE_NOT_MODIFIED
 
     @classmethod
@@ -111,6 +112,7 @@ class AttributeInitialization(HairballPlugin):
             'background': self.attribute_state(scratch.stage.scripts,
                                                'costume')}
         #self.output_results(changes)
+        print changes
         return {'initialized': changes}
 
 
@@ -134,6 +136,7 @@ class VariableInitialization(HairballPlugin):
         initialized.
 
         """
+
         def conditionally_set_not_modified():
             """Set the variable to modified if it hasn't been altered."""
             state = variables.get(block.args[0], None)
@@ -145,9 +148,11 @@ class VariableInitialization(HairballPlugin):
         for script in green_flag:
             in_zone = True
             for name, level, block in cls.iter_blocks(script.blocks):
-                if name == 'broadcast %e and wait':
+                #if name == 'broadcast %e and wait':
+                if name == 'broadcast %s and wait':###cambiar
                     in_zone = False
-                if name == 'set %v to %s':
+                #if name == 'set %v to %s':
+                if name == 'set %s to %s':
                     state = variables.get(block.args[0], None)
                     if state is None:
                         continue  # Not a variable we care about
@@ -164,17 +169,20 @@ class VariableInitialization(HairballPlugin):
                     elif state == cls.STATE_NOT_MODIFIED:
                         state = cls.STATE_MODIFIED
                     variables[block.args[0]] = state
-                elif name == 'change %v by %n':
+                #elif name == 'change %v by %n':
+                elif name == 'change %s by %s':
                     conditionally_set_not_modified()
         for script in other:
             for name, _, block in cls.iter_blocks(script.blocks):
-                if name in ('change %v by %n', 'set %v to %s'):
+                #if name in ('change %v by %n', 'set %v to %s'):
+                if name in ('change %s by %s', 'set %s to %s'):
                     conditionally_set_not_modified()
         return variables
 
     def analyze(self, scratch):
         """Run and return the results of the VariableInitialization plugin."""
-        variables = dict((x, self.variable_state(x.scripts, x.variables))
+
+        variables = dict((x, self.variable_state(x.scripts, scratch.variables))### he cambiado x.variables por scratch.variables
                          for x in scratch.sprites)
         variables['global'] = self.variable_state(self.iter_scripts(scratch),
                                                   scratch.stage.variables)
