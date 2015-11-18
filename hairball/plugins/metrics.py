@@ -19,21 +19,22 @@ class CyclomaticComplexity(HairballPlugin):
             CC = number of conditions + 1
         """
         print("Total Cyclomatic Complexity: %i" % self.total)
-        average =  float (self.total) / len(self.cc)
-        print ("Average Cyclomatic Complexity: %.2f" % average)
-        print ("Cyclomatic Complexity by script:")
-        print self.cc
+        #average =  float (self.total) / len(self.cc)
+        #print ("Average Cyclomatic Complexity: %.2f" % average)
+        #print ("Cyclomatic Complexity by script:")
+        #print self.cc
 
     def analyze(self, scratch):
         """Run and return the results from the CyclomaticComplexity plugin."""
-        conditionals = (['if %s then%s', 'if %s then%selse%s', 
-            'repeat until %s%s', 'wait until %s', 
-            'when backdrop switches to %s', 'when %s > %s'])
+        conditionals = (['if %s then%s', 'repeat until %s%s',
+            'wait until %s', '%s and %s', '%s or %s'])
         for script in self.iter_scripts(scratch):
             conditions = 0
             for name, _, _ in self.iter_blocks(script.blocks):
                 if name in conditionals:
                     conditions += 1
+                elif name == 'if %s then%selse%s':
+                    conditions +=2
             self.cc.append(conditions + 1)
             self.total += conditions +1
 
@@ -59,10 +60,10 @@ class Halstead(HairballPlugin):
         print ("Volume: %.2f" % self.V)
         print ("Difficulty: %.2f" % self.D)
         print ("Effort: %.2f" % self.E)
-        print ("Time required to program: %.2f seconds = %.2f minutes"  % 
+        print ("Time required to program: %.2f seconds = %.2f minutes"  %
             (self.T, self.T / float (60)))
-        
-        
+
+
 
     def analyze(self, scratch):
         """Run and return the results from the Halstead plugin."""
@@ -72,14 +73,14 @@ class Halstead(HairballPlugin):
             for name, _, arguments in self.iter_blocks(script.blocks):
                 file_operators[name] += 1
                 for arg in arguments.args:
-                    if (not (type (arg) is list) and 
+                    if (not (type (arg) is list) and
                         'kurt' not in str(type(arg))):
                         file_operands[arg] += 1
         N1 = sum(file_operators.values())
         N2 = sum(file_operands.values())
         n1 = len(file_operators.values())
         n2 = len(file_operands.values())
-        self.n = n1+ n2
+        self.n = n1 + n2
         self.N = N1 + N2
         self.V = float(self.N) * math.log(self.n, 2)
         self.D = n1/ float (2) * (N2/float (n2))
