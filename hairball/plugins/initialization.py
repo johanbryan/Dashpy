@@ -7,7 +7,7 @@ from hairball.plugins import HairballPlugin
 def partition_scripts(scripts, start_type1, start_type2):
     """Return two lists of scripts out of the original `scripts` list.
 
-    Scripts that begin with a `start_type1` or `start_type2` blocks 
+    Scripts that begin with a `start_type1` or `start_type2` blocks
     are returned first. All other scripts are returned second.
 
     """
@@ -68,7 +68,8 @@ class AttributeInitialization(HairballPlugin):
                     if in_zone and level == 0:  # Success!
                         if state == cls.STATE_NOT_MODIFIED:
                             state = cls.STATE_INITIALIZED
-                        else:  # Multiple when green flag clicked conflict
+                        elif HairballPlugin.script_start_type(script) == cls.HAT_GREEN_FLAG:
+                            # Multiple when green flag clicked conflict
                             state = cls.STATE_MODIFIED
                     elif in_zone:
                         continue  # Conservative ignore for nested absolutes
