@@ -21,8 +21,8 @@ class Variables(HairballPlugin):
     def analyze(self, scratch):
         """Run and return the results of the Variables plugin."""          
         self.total = len(scratch.variables)
-        for x in scratch.sprites:
-            self.total += len(x.variables)
+        for sprite in scratch.sprites:
+            self.total += len(sprite.variables)
 
 class Lists(HairballPlugin):
 
@@ -39,8 +39,8 @@ class Lists(HairballPlugin):
     def analyze(self, scratch):
         """Run and return the results of the Lists plugin."""
         self.total = len(scratch.lists)
-        for x in scratch.sprites:
-            self.total += len(x.lists)
+        for sprite in scratch.sprites:
+            self.total += len(sprite.lists)
 
 class BlockCounts(HairballPlugin):
 
@@ -57,7 +57,7 @@ class BlockCounts(HairballPlugin):
     def analyze(self, scratch):
         """Run and return the results from the BlockCounts plugin."""
         for script in self.iter_scripts(scratch):
-            for b in self.iter_blocks(script.blocks):
+            for block in self.iter_blocks(script.blocks):
                 self.blocks += 1
 
 class Colors(HairballPlugin):
@@ -94,3 +94,25 @@ class Colors(HairballPlugin):
     def analyze(self, scratch):
         """Run and return the results from the BlockCounts plugin."""
         #ToDo: get the images from stage and characters
+
+class Ending(HairballPlugin):
+
+    """Plugin that checks if the project seems to end."""
+
+    def __init__(self):
+        super(Ending, self).__init__()
+        self.total = 0
+
+    def finalize(self):
+        """Output whether the project seems to end or not."""
+        if self.total > 0:
+            print "The game seems to end at some point"
+        else:
+            print "The game seems to not ever end"
+
+    def analyze(self, scratch):
+        """Run and return the results of the Ending plugin."""          
+        for script in self.iter_scripts(scratch):
+            for name, _, _ in self.iter_blocks(script.blocks):
+                if name == "stop %s":
+                    self.total += 1
