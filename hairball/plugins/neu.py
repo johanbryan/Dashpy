@@ -21,3 +21,21 @@ class Variables(HairballPlugin):
         self.total = len(scratch.variables)
         for x in scratch.sprites:
             self.total += len(x.variables)
+
+class Lists(HairballPlugin):
+
+    """Plugin that counts the number of lists in a project."""
+
+    def __init__(self):
+        super(Lists, self).__init__()
+        self.total = 0
+
+    def finalize(self):
+        """Output the number of lists in the project."""
+        print("Number of lists: %i" % self.total)
+
+    def analyze(self, scratch):
+        """Run and return the results of the Lists plugin."""
+        self.total = len(scratch.lists)
+        for x in scratch.sprites:
+            self.total += len(x.lists)
