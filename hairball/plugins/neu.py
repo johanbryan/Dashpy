@@ -39,3 +39,22 @@ class Lists(HairballPlugin):
         self.total = len(scratch.lists)
         for x in scratch.sprites:
             self.total += len(x.lists)
+
+class BlockCounts(HairballPlugin):
+
+    """Plugin that keeps track of the number of blocks in a project."""
+
+    def __init__(self):
+        super(BlockCounts, self).__init__()
+        self.blocks = 0
+
+    def finalize(self):
+        """Output the aggregate block count results."""
+        print("Number of blocks %i" % self.blocks)
+
+    def analyze(self, scratch):
+        """Run and return the results from the BlockCounts plugin."""
+        for script in self.iter_scripts(scratch):
+            for b in self.iter_blocks(script.blocks):
+                self.blocks += 1
+
