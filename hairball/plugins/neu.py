@@ -115,4 +115,106 @@ class Ending(HairballPlugin):
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if name == "stop %s":
-                    self.total += 1
+                    self.total
+                    all_scripts = list(self.iter_scripts(scratch))
+
+class Beginning(HairballPlugin):
+
+    """
+        Plugin that checks if the project seems to show instructions or a menu
+        when the project is launched.
+    """
+
+    def __init__(self):
+        super(Beginning, self).__init__()
+        self.backdropWhenGreenFlag = 0
+        self.spritesHidden = 0
+        self.spritesShown = 0
+        self.actions = []
+
+    def finalize(self):
+        """Output whether the project seems to have beginning instructions"""
+        if (self.backdropWhenGreenFlag > 0 
+            and self.spritesHidden > 0
+            and self.spritesShown >0
+            and len(self.actions) > 0):
+            print "The game seems to present instructions or a menu when launched"
+        else:
+            print "The game seems to NOT present instructions nor a menu when launched"
+
+    def backdropGreenFlag (self, all_scripts):
+        """
+            Check if a specific backdrop is displayed when green flag
+        """
+        backdropWhenGreenFlag = 0
+        for script in all_scripts:
+            if self.script_start_type(script) == self.HAT_GREEN_FLAG:
+                for name, _, _ in self.iter_blocks(script.blocks):
+                    if name == 'switch backdrop to %s':
+                        backdropWhenGreenFlag = 1
+                        break
+            if backdropWhenGreenFlag == 1:
+                break
+        return backdropWhenGreenFlag
+
+    def getHiddenSprites (self, scratch):
+        """
+            Check if there are sprites that are hidden when green flag
+        """
+        spritesHidden = 0
+        for sprite in scratch.sprites:
+            for script in sprite.scripts:
+                if not isinstance(script, kurt.Comment):
+                    if self.script_start_type(script) == self.HAT_GREEN_FLAG:
+                        for name, _, _ in self.iter_blocks(script.blocks):
+                            if name == 'hide':
+                                spritesHidden += 1
+                                break
+        return spritesHidden
+    def getActions (self, all_scripts):
+        """
+            Find messages sent or backdrops displayed or variables modified
+            right after an user action (press key or mouse click)
+        """
+        actions = []
+        for script in all_scripts:
+            if (self.script_start_type(script) == self.HAT_KEY
+                or self.script_start_type(script) == self.HAT_MOUSE):
+                for name, _, block in self.iter_blocks(script.blocks):
+                    if (name == 'switch backdrop to %s' 
+                                or name == 'change %s by %s' 
+                                or name == 'set %s to %s' 
+                                or name == 'when %s key pressed' 
+                                or name == 'broadcast %s' 
+                                or name == 'broadcast %s and wait'):
+                        actions.append(block.args[0].lower())
+        return actions
+
+    def getShownSprites (self, scratch):
+        """
+            Check if there are sprites that are shown after one of the actions
+        """
+        spritesShown = 0
+        for sprite in scratch.sprites:
+            for script in sprite.scripts:
+                if not isinstance(script, kurt.Comment):
+                    if (self.script_start_type(script) == self.HAT_BACKDROP 
+                        or self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE):
+                        if script.blocks[0].args[0].lower() in self.actions:
+                            for name, _, _ in self.iter_blocks(script.blocks):
+                                if name == 'show':
+                                    spritesShown += 1
+                                    break
+                    #ToDo: check show after change in variable
+                    #ToDo: check if clones are created after action, and clones are in turn shown
+        return spritesShown
+
+    def analyze(self, scratch):
+        """Run and return the results of the Beginning plugin."""          
+        all_scripts = list(self.iter_scripts(scratch))
+        self.backdropWhenGreenFlag = self.backdropGreenFlag(all_scripts)
+        self.spritesHidden = self.getHiddenSprites(scratch)
+        #ToDo: Check if there are variables and lists and if so check if they are hidden when launched
+        self.actions = self.getActions(all_scripts)
+        self.spritesShown = self.getShownSprites(scratch)
+        #ToDo: Check if there are variables and lists and if so check if they are shown after actions
