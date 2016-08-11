@@ -200,13 +200,24 @@ class Beginning(HairballPlugin):
             for script in sprite.scripts:
                 if not isinstance(script, kurt.Comment):
                     if (self.script_start_type(script) == self.HAT_BACKDROP 
-                        or self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE):
+                        or self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE
+                        or self.script_start_type(script) == self.HAT_KEY):
                         if script.blocks[0].args[0].lower() in self.actions:
                             for name, _, _ in self.iter_blocks(script.blocks):
                                 if name == 'show':
                                     spritesShown += 1
                                     break
-                    #ToDo: check show after change in variable
+                    elif self.script_start_type(script) == self.HAT_GREEN_FLAG:
+                        variableAction = 0
+                        show = 0
+                        for name, _, block in self.iter_blocks(script.blocks):
+                            if name == '%s' and block.args[0].lower() in self.actions:
+                                variableAction += 1
+                                break
+                            elif name == 'show':
+                                spritesShown += 1
+                        if variableAction > 0 and show > 0:
+                            spritesShown += 1
                     #ToDo: check if clones are created after action, and clones are in turn shown
         return spritesShown
 
