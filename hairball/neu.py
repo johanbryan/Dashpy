@@ -192,6 +192,27 @@ class Beginning(HairballPlugin):
                         actions.append(block.args[0].lower())
         return actions
 
+    def getShownSprites (self, scratch):
+        """
+            Check if there are sprites that are shown after one of the actions
+        """
+        spritesShown = 0
+        for sprite in scratch.sprites:
+            for script in sprite.scripts:
+                if not isinstance(script, kurt.Comment):
+                    if (self.script_start_type(script) == self.HAT_BACKDROP 
+                        or self.script_start_type(script) == self.HAT_WHEN_I_RECEIVE):
+                        if script.blocks[0].args[0].lower() in self.actions:
+                            for name, _, _ in self.iter_blocks(script.blocks):
+                                if name == 'show':
+                                    spritesShown += 1
+                                    break
+                    #ToDo: check show after change in variable
+                    #ToDo: check if clones are created after action, and clones are in turn shown
+        print ("Out of %i sprites, %i seem to be shown after user action" 
+                % (self.count_sprites(scratch), spritesShown))
+        return spritesShown
+
     def analyze(self, scratch):
         """Run and return the results of the Beginning plugin."""          
         all_scripts = list(self.iter_scripts(scratch))
@@ -202,3 +223,5 @@ class Beginning(HairballPlugin):
         #ToDo: Check if there are variables and lists and if so check if they are hidden when launched
         self.actions = self.getActions(all_scripts)
         print self.actions
+        self.spritesShown = self.getShownSprites(scratch)
+        print self.spritesShown
