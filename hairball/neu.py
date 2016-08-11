@@ -140,7 +140,7 @@ class Beginning(HairballPlugin):
             and len(self.actions) > 0):
             print "The game seems to present instructions or a menu when launched"
         else:
-            print "The game seems to NOT present instructions or a menu when launched"
+            print "The game seems to NOT present instructions nor a menu when launched"
 
     def backdropGreenFlag (self, all_scripts):
         """
@@ -170,8 +170,6 @@ class Beginning(HairballPlugin):
                             if name == 'hide':
                                 spritesHidden += 1
                                 break
-        print ("Out of %i sprites, %i seem to be hidden when game launched" 
-                % (self.count_sprites(scratch), spritesHidden))
         return spritesHidden
     def getActions (self, all_scripts):
         """
@@ -209,19 +207,14 @@ class Beginning(HairballPlugin):
                                     break
                     #ToDo: check show after change in variable
                     #ToDo: check if clones are created after action, and clones are in turn shown
-        print ("Out of %i sprites, %i seem to be shown after user action" 
-                % (self.count_sprites(scratch), spritesShown))
         return spritesShown
 
     def analyze(self, scratch):
         """Run and return the results of the Beginning plugin."""          
         all_scripts = list(self.iter_scripts(scratch))
         self.backdropWhenGreenFlag = self.backdropGreenFlag(all_scripts)
-        print self.backdropWhenGreenFlag
         self.spritesHidden = self.getHiddenSprites(scratch)
-        print self.spritesHidden
         #ToDo: Check if there are variables and lists and if so check if they are hidden when launched
         self.actions = self.getActions(all_scripts)
-        print self.actions
         self.spritesShown = self.getShownSprites(scratch)
-        print self.spritesShown
+        #ToDo: Check if there are variables and lists and if so check if they are shown after actions
