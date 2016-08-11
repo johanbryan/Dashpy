@@ -155,9 +155,25 @@ class Beginning(HairballPlugin):
                 break
         return backdropWhenGreenFlag
 
+    def HiddenSprites (self, scratch):
+        #Check if there are sprites that are hidden when green flag
+        spritesHidden = 0
+        for sprite in scratch.sprites:
+            for script in sprite.scripts:
+                if not isinstance(script, kurt.Comment):
+                    if self.script_start_type(script) == self.HAT_GREEN_FLAG:
+                        for name, _, _ in self.iter_blocks(script.blocks):
+                            if name == 'hide':
+                                spritesHidden += 1
+                                break
+        print ("Out of %i sprites, %i seem to be hidden when game launched" 
+                % (self.count_sprites(scratch), spritesHidden))
+        return spritesHidden
+
     def analyze(self, scratch):
         """Run and return the results of the Beginning plugin."""          
         all_scripts = list(self.iter_scripts(scratch))
         self.backdropWhenGreenFlag = self.backdropGreenFlag(all_scripts)
         print self.backdropWhenGreenFlag
-
+        self.spritesHidden = self.HiddenSprites(scratch)
+        print self.spritesHidden
