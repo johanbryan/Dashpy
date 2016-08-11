@@ -94,6 +94,7 @@ class Colors(HairballPlugin):
     def analyze(self, scratch):
         """Run and return the results from the BlockCounts plugin."""
         #ToDo: get the images from stage and characters
+        print "Still in development"
 
 class Ending(HairballPlugin):
 
