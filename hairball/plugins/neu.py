@@ -59,6 +59,28 @@ class Backgrounds(HairballPlugin):
         """Run and return the results of the Backgrounds plugin."""          
         self.total = len(scratch.stage.backgrounds)
 
+class Costumes(HairballPlugin):
+
+    """Plugin that counts the number of costumes in a project."""
+
+    def __init__(self):
+        super(Costumes, self).__init__()
+        self.total = 0
+        self.sprites = 0
+
+
+    def finalize(self):
+        """Output the number of costumes in the project."""
+        print "Number of costumes: %i" % self.total
+        print "Number of sprites: %i" % self.sprites
+        print "Average of costumes by sprite:" +  str(self.total/float(self.sprites))
+
+    def analyze(self, scratch):
+        """Run and return the results of the costumes plugin."""          
+        for sprite in scratch.sprites:
+            self.total += len(sprite.costumes)
+            self.sprites += 1
+
 class BlockCounts(HairballPlugin):
 
     """Plugin that keeps track of the number of blocks in a project."""
