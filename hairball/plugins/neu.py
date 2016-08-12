@@ -2,8 +2,9 @@
 
 import kurt
 from hairball.plugins import HairballPlugin
-from PIL import Image
+#from PIL import Image
 import os
+
 
 
 class Variables(HairballPlugin):
@@ -41,6 +42,22 @@ class Lists(HairballPlugin):
         self.total = len(scratch.lists)
         for sprite in scratch.sprites:
             self.total += len(sprite.lists)
+
+class Backgrounds(HairballPlugin):
+
+    """Plugin that counts the number of backgrounds in a project."""
+
+    def __init__(self):
+        super(Backgrounds, self).__init__()
+        self.total = 0
+
+    def finalize(self):
+        """Output the number of backgrounds in the project."""
+        print("Number of backgrounds: %i" % self.total)
+
+    def analyze(self, scratch):
+        """Run and return the results of the Backgrounds plugin."""          
+        self.total = len(scratch.stage.backgrounds)
 
 class BlockCounts(HairballPlugin):
 
