@@ -147,7 +147,7 @@ class Mastery(HairballPlugin):
         
     def logic (self, file_blocks):
         """Assign the Logic skill result"""
-        operations = {'%s and %s', '%s or %s', 'not %s','%s = %s'}
+        operations = {'%s and %s', '%s or %s', 'not %s'}
         score = 0
         for operation in operations:
             if file_blocks[operation]:
