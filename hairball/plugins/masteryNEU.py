@@ -24,12 +24,12 @@ class Mastery(HairballPlugin):
         total = 0
         for i in self.concepts.items():
             total += i[1]
-        print ("Total mastery points: %d/42" % total)
+        print ("Total mastery points: %d/21" % total)
         average =  float (total) / 7
-        print ("Average mastery points: %.2f/6" % average)
-        if average > 4:
+        print ("Average mastery points: %.2f/3" % average)
+        if average > 2:
             print "Overall programming competence: Proficiency"
-        elif average > 2:
+        elif average > 1:
             print "Overall programming competence: Developing"
         else:
             print "Overall programming competence: Basic"
@@ -63,7 +63,7 @@ class Mastery(HairballPlugin):
             developing = 1
         if file_blocks["wait %s secs"]:
             basic = 1
-        self.concepts['Synchronization'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['Synchronization'] = basic + developing + proficiency
     
     def flow_control(self, file_blocks, scratch):
         """Assign the Flow Control skill result"""
@@ -79,7 +79,7 @@ class Mastery(HairballPlugin):
             if self.count_blocks(script) > 1: 
                 basic = 1
                 break
-        self.concepts['FlowControl'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['FlowControl'] = basic + developing + proficiency
         
     def abstraction(self, file_blocks, scratch):
         """Assign the Abstraction skill result"""
@@ -95,7 +95,7 @@ class Mastery(HairballPlugin):
             scripts += 1
         if scripts > 1:
             basic = 1
-        self.concepts['Abstraction'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['Abstraction'] = basic + developing + proficiency
         
     def data(self, file_blocks):
         """Assign the Data representation skill result"""
@@ -126,7 +126,7 @@ class Mastery(HairballPlugin):
             if file_blocks[modifier]:
                 basic = 1
                 break
-        self.concepts['DataRepresentation'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['DataRepresentation'] = basic + developing + proficiency
 
     def user_interactivity(self, file_blocks):
         """Assign the User Interactivity skill result"""
@@ -148,7 +148,7 @@ class Mastery(HairballPlugin):
                 break
         if file_blocks['when @greenFlag clicked']:
             basic = 1
-        self.concepts['UserInteractivity'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['UserInteractivity'] = basic + developing + proficiency
         
         
     def logic (self, file_blocks):
@@ -165,7 +165,7 @@ class Mastery(HairballPlugin):
             developing = 1
         if file_blocks["if %s then%s"]: 
             basic = 1
-        self.concepts['Logic'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['Logic'] = basic + developing + proficiency
     
     def parallelization (self, scratch):
         """Assign the Parallelization skill result"""
@@ -230,4 +230,4 @@ class Mastery(HairballPlugin):
                         #self.concepts['Parallelization'] = 2
                         developing = 1
                         #return
-        self.concepts['Parallelization'] = basic + (developing * 2) + (proficiency * 3)
+        self.concepts['Parallelization'] = basic + developing + proficiency
