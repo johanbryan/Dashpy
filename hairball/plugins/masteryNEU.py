@@ -37,8 +37,9 @@ class Mastery(HairballPlugin):
         """Run and return the results from the Mastery plugin."""
         file_blocks = Counter()
         for script in self.iter_scripts(scratch):
-            for name, _, _ in self.iter_blocks(script.blocks):
-                file_blocks[name] += 1
+            if self.script_start_type(script) != self.NO_HAT:
+                for name, _, _ in self.iter_blocks(script.blocks):
+                    file_blocks[name] += 1
         self.blocks.update(file_blocks)  # Update the overall count
         self.flow_control(file_blocks, scratch)
         self.synchronization(file_blocks)
@@ -92,9 +93,11 @@ class Mastery(HairballPlugin):
             developing = 1
         scripts = 0
         for script in self.iter_scripts(scratch):
-            scripts += 1
-        if scripts > 1:
-            basic = 1
+            if self.script_start_type(script) != self.NO_HAT:
+                scripts += 1
+                if scripts > 1:
+                    basic = 1
+                    break
         self.concepts['Abstraction'] = basic + developing + proficiency
         
     def data(self, file_blocks):
