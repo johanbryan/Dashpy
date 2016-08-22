@@ -252,8 +252,8 @@ class Beginning(HairballPlugin):
                     elif name =='next backdrop' and self.backdropWhenGreenFlag != 0:
                         backs = []
                         for back in scratch.stage.backgrounds:
-                            backs.append(back.name)
-                        print backs
+                            backs.append(back.name.lower())
+                        #print backs
                         if (backs.index(self.backdropWhenGreenFlag) + 1 < len (backs)):
                             actions.append(backs[backs.index(self.backdropWhenGreenFlag) + 1])
                         elif len(backs) > 0:
