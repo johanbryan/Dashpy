@@ -174,6 +174,10 @@ class Beginning(HairballPlugin):
 
     def finalize(self):
         """Output whether the project seems to have beginning instructions"""
+        print self.backdropWhenGreenFlag
+        print self.spritesHidden
+        print self.spritesShown
+        print self.actions
         if (self.backdropWhenGreenFlag > 0 
             and len (self.spritesHidden) > 0
             and self.spritesShown >0
@@ -231,6 +235,7 @@ class Beginning(HairballPlugin):
                         or self.script_start_type(script) == self.HAT_KEY):
                         for name, _, block in self.iter_blocks(script.blocks):
                             if (name == 'switch backdrop to %s' 
+                                or name == 'switch backdrop to %s and wait' 
                                 or name == 'change %s by %s' 
                                 or name == 'set %s to %s' 
                                 #or name == 'when %s key pressed' 
@@ -243,6 +248,7 @@ class Beginning(HairballPlugin):
                 or self.script_start_type(script) == self.HAT_KEY):
                 for name, _, block in self.iter_blocks(script.blocks):
                     if (name == 'switch backdrop to %s' 
+                        or name == 'switch backdrop to %s and wait'
                         or name == 'change %s by %s' 
                         or name == 'set %s to %s' 
                         #or name == 'when %s key pressed' 
