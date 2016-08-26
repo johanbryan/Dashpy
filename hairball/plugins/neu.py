@@ -174,10 +174,6 @@ class Beginning(HairballPlugin):
 
     def finalize(self):
         """Output whether the project seems to have beginning instructions"""
-        print self.backdropWhenGreenFlag
-        print self.spritesHidden
-        print self.spritesShown
-        print self.actions
         if (self.backdropWhenGreenFlag > 0 
             and len (self.spritesHidden) > 0
             and self.spritesShown >0
