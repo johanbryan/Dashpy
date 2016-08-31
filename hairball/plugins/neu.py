@@ -305,3 +305,121 @@ class Beginning(HairballPlugin):
         self.actions = self.getActions(scratch)
         self.spritesShown = self.getShownSprites(scratch)
         #ToDo: Check if there are variables and lists and if so check if they are shown after actions
+
+class ModelOfReality(HairballPlugin):
+
+    """Plugin that detects reinforcing feedback loops in a project."""
+
+    def __init__(self):
+        super(ModelOfReality, self).__init__()
+        self.vars = []
+        self.sprites = []
+
+    def findSetter(self, scratch, var):
+        """Return the initial value of var ('na' if not found)"""
+        for script in self.iter_scripts(scratch):
+            for name, _, block in self.iter_blocks(script.blocks):
+                if (name == 'set %s to %s' and block.args[0] == var):
+                    return block.args[1]
+        return 'na'
+
+    def findRelationships(self, scratch, var):
+        """Return the variables that affect var('na' if not found)"""
+        relationships = []
+        r = []
+        for sprite in scratch.sprites:
+            for script in sprite.scripts:
+                for name, depth, block in self.iter_blocks(script.blocks):
+                    if (name == 'change %s by %s' and block.args[0] == var):
+                        for v in self.vars:
+                            if str(v[0] != var):
+                                r = []
+                                if type(block.args[1]) is kurt.Block:
+                                    if str(v[0]) in block.args[1].stringify():
+                                        r.append(v[0])
+                                        r.append(block.args[1].stringify())
+                                        r.append(sprite.name)
+                                else:
+                                    r.append("---")
+                                    r.append(str(block.args[1]))
+                                    r.append(sprite.name)
+                                if len(r) > 0:
+                                    if len(relationships) == 0 or r not in relationships:
+                                        relationships.append(r)
+                                    if self.isUserOperated(scratch,sprite.name):
+                                        if sprite.name not in self.sprites:
+                                            self.sprites.append(sprite.name)
+        for script in scratch.stage.scripts:
+            for name, depth, block in self.iter_blocks(script.blocks):
+                    if (name == 'change %s by %s' and block.args[0] == var):
+                        for v in self.vars:
+                            if str(v[0] != var):
+                                r = []
+                                if type(block.args[1]) is kurt.Block:
+                                    if str(v[0]) in block.args[1].stringify():
+                                        r.append(v[0])
+                                        r.append(block.args[1].stringify())
+                                        r.append('Stage')
+                                        if len(relationships) == 0 or v[1] not in zip(*relationships)[1]:
+                                            relationships.append(r)
+                                else:
+                                    r.append("---")
+                                    r.append(str(block.args[1]))
+                                    r.append('Stage')
+                                    if len(relationships) == 0 or r not in relationships:
+                                        relationships.append(r)
+        if len(relationships) > 0:
+            return relationships
+        else:
+            return ['na']
+
+    def isUserOperated(self, scratch, sprite):
+        """Return True if sprite is is handled by the user """
+        for character in scratch.sprites:
+            if character.name == sprite: 
+                for script in character.scripts:
+                    for name, _, _ in self.iter_blocks(script.blocks):
+                        if (name == 'when %s key pressed' or
+                            name == 'when this sprite clicked' or
+                            name == 'mouse down?' or
+                            name == 'key %s pressed?' or
+                            name == 'ask %s and wait' or
+                            name == 'answer' or
+                            name == 'video %s on %s' or
+                            name == 'when %s > %s' or
+                            name == 'loudness'):
+                            return True
+        return False
+
+    def finalize(self):
+        """Output the the variables and their relationships in a project."""
+        for v in self.vars:
+            print 'Variable: ' + str(v[0])
+            print '  - Initial value: ' + str(v[1])
+            if len(v) > 2:
+                #print v[2]
+                for r in list(v[2]):
+                    if r[0] != '---':
+                        print '  - Modified in ' + r[2] + ' by variable ' + r[0] + ' with following operation: ' + r[1]
+                    else:
+                        print '  - Modified in ' + r[2] + ' with following operand: ' + r[1]
+        print "List of sprites that are handled by the user:"
+        for sprite in self.sprites:
+            print sprite
+                    #print("---")
+                    #print r
+
+    def analyze(self, scratch):
+        """Run and return the results of the ModelOfReality plugin."""          
+        for var in scratch.variables:
+            v = []
+            v. append(str(var))
+            v.append(self.findSetter(scratch,var))            
+            self.vars.append(v)
+        for var in self.vars:
+            var.append(self.findRelationships(scratch,var[0]))
+        for sprite in scratch.sprites:
+            for var in sprite.variables:
+                v = []
+                v. append(str(var))
+                self.vars.append(v)
