@@ -101,22 +101,63 @@ class BlockCounts(HairballPlugin):
 
 class Chance(HairballPlugin):
 
-    """Plugin that keeps track of the number of blocks in a project."""
+    """Plugin that keeps track of the number of random number generator blocks in a project."""
 
     def __init__(self):
         super(Chance, self).__init__()
         self.total = 0
 
     def finalize(self):
-        """Output the aggregate block count results."""
+        """Output the aggregate random block count results."""
         print("Number of random blocks: %i" % self.total)
 
     def analyze(self, scratch):
-        """Run and return the results from the BlockCounts plugin."""
+        """Run and return the results from the Chance plugin."""
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if name == 'pick random %s to %s':
                     self.total += 1
+
+class UserInteractivity(HairballPlugin):
+
+    """Plugin that keeps track of the types of user inteactivity in a project."""
+
+    def __init__(self):
+        super(UserInteractivity, self).__init__()
+        self.mouseClick = 0
+        self.mouseMove = 0
+        self.pressKey = 0
+        self.answer = 0
+        self.media = 0
+
+    def finalize(self):
+        """Output the results"""
+        print "Types of user interactivity that appear in the project:"
+        if self.mouseClick > 0:
+            print "Mouse - clicks"
+        if self.mouseMove > 0:
+            print "Mouse - movements"
+        if self.pressKey > 0:
+            print "Keyboard - keys pressed"
+        if self.answer > 0:
+            print "Answer questions"
+        if self.media > 0:
+            print "Sound or video"
+
+    def analyze(self, scratch):
+        """Run and return the results from the UserInteractivity plugin."""
+        for script in self.iter_scripts(scratch):
+            for name, _, block in self.iter_blocks(script.blocks):
+                if name == 'video %s on %s' or name == 'when %s > %s' or name == 'loudness':
+                    self.media += 1
+                elif name == 'when %s key pressed' or name == 'key %s pressed?':
+                    self.pressKey += 1
+                elif name == 'ask %s and wait' or name == 'answer':
+                    self.answer += 1
+                elif name == 'when this sprite clicked' or name == 'mouse down?':
+                    self.mouseClick += 1
+                elif ((name == 'touching %s?' or name == 'go to %s') and block.args[0] == 'mouse-pointer'):
+                    self.mouseMove += 1
 
 class Colors(HairballPlugin):
 
