@@ -99,6 +99,25 @@ class BlockCounts(HairballPlugin):
             for block in self.iter_blocks(script.blocks):
                 self.blocks += 1
 
+class Chance(HairballPlugin):
+
+    """Plugin that keeps track of the number of blocks in a project."""
+
+    def __init__(self):
+        super(Chance, self).__init__()
+        self.total = 0
+
+    def finalize(self):
+        """Output the aggregate block count results."""
+        print("Number of random blocks: %i" % self.total)
+
+    def analyze(self, scratch):
+        """Run and return the results from the BlockCounts plugin."""
+        for script in self.iter_scripts(scratch):
+            for name, _, _ in self.iter_blocks(script.blocks):
+                if name == 'pick random %s to %s':
+                    self.total += 1
+
 class Colors(HairballPlugin):
 
     """Plugin that keeps track of the colors of the stage images."""
