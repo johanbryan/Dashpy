@@ -320,7 +320,10 @@ class ModelOfReality(HairballPlugin):
         for script in self.iter_scripts(scratch):
             for name, _, block in self.iter_blocks(script.blocks):
                 if (name == 'set %s to %s' and block.args[0] == var):
-                    return block.args[1]
+                    if type(block.args[1]) is not kurt.Block:
+                        return block.args[1]
+                    else:
+                        return block.args[1].stringify()
         return 'na'
 
     def findRelationships(self, scratch, var):
@@ -393,21 +396,23 @@ class ModelOfReality(HairballPlugin):
 
     def finalize(self):
         """Output the the variables and their relationships in a project."""
-        for v in self.vars:
-            print 'Variable: ' + str(v[0])
-            print '  - Initial value: ' + str(v[1])
-            if len(v) > 2:
-                #print v[2]
-                for r in list(v[2]):
-                    if r[0] != '---':
-                        print '  - Modified in ' + r[2] + ' by variable ' + r[0] + ' with following operation: ' + r[1]
-                    else:
-                        print '  - Modified in ' + r[2] + ' with following operand: ' + r[1]
-        print "List of sprites that are handled by the user:"
-        for sprite in self.sprites:
-            print sprite
-                    #print("---")
-                    #print r
+        if len(self.vars) > 0:
+            for v in self.vars:
+                print 'Variable: ' + str(v[0])
+                print '  - Initial value: ' + str(v[1])
+                if v[2] != ['na']:
+                    #print v[2]
+                    for r in list(v[2]):
+                        if r[0] != '---':
+                            print '  - Modified in ' + r[2] + ' by variable ' + r[0] + ' with following operation: ' + r[1]
+                        else:
+                            print '  - Modified in ' + r[2] + ' with following operand: ' + r[1]
+            if len(self.sprites) > 0:
+                print "List of sprites where vars are modified that are handled by the user:"
+                for sprite in self.sprites:
+                    print "  - " + sprite
+        else:
+            print "No variables"
 
     def analyze(self, scratch):
         """Run and return the results of the ModelOfReality plugin."""          
@@ -416,10 +421,11 @@ class ModelOfReality(HairballPlugin):
             v. append(str(var))
             v.append(self.findSetter(scratch,var))            
             self.vars.append(v)
-        for var in self.vars:
-            var.append(self.findRelationships(scratch,var[0]))
         for sprite in scratch.sprites:
             for var in sprite.variables:
                 v = []
                 v. append(str(var))
+                v.append(self.findSetter(scratch,var))            
                 self.vars.append(v)
+        for var in self.vars:
+            var.append(self.findRelationships(scratch,var[0]))
