@@ -50,14 +50,23 @@ class Backgrounds(HairballPlugin):
     def __init__(self):
         super(Backgrounds, self).__init__()
         self.total = 0
+        self.use = "No"
 
     def finalize(self):
         """Output the number of backgrounds in the project."""
         print("Number of backgrounds: %i" % self.total)
+        print "Uses blocks to modify backdrops?: " + self.use
 
     def analyze(self, scratch):
         """Run and return the results of the Backgrounds plugin."""          
         self.total = len(scratch.stage.backgrounds)
+        for script in self.iter_scripts(scratch):
+            for name, _, _ in self.iter_blocks(script.blocks):
+                if name == 'switch backdrop to %s' or name == 'next backdrop' or name == 'switch backdrop to %s and wait':
+                    self.use = "Yes"
+                    break
+            if self.use == "Yes":
+                break
 
 class Costumes(HairballPlugin):
 
@@ -67,19 +76,32 @@ class Costumes(HairballPlugin):
         super(Costumes, self).__init__()
         self.total = 0
         self.sprites = 0
+        self.use = 'No'
 
 
     def finalize(self):
         """Output the number of costumes in the project."""
         print "Number of costumes: %i" % self.total
         print "Number of sprites: %i" % self.sprites
-        print "Average of costumes by sprite:" +  str(self.total/float(self.sprites))
+        if self.sprites > 0:
+            output = str(self.total/float(self.sprites))
+        else:
+            output = "0"
+        print "Average of costumes by sprite:" + output
+        print "Uses blocks to modify costumes?: " + self.use
 
     def analyze(self, scratch):
         """Run and return the results of the costumes plugin."""          
         for sprite in scratch.sprites:
             self.total += len(sprite.costumes)
             self.sprites += 1
+        for script in self.iter_scripts(scratch):
+            for name, _, _ in self.iter_blocks(script.blocks):
+                if name == 'switch costume to %s' or name == 'next costume':
+                    self.use = "Yes"
+                    break
+            if self.use == "Yes":
+                break
 
 class BlockCounts(HairballPlugin):
 
