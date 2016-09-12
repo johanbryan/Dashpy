@@ -46,7 +46,7 @@ class Mastery(HairballPlugin):
         self.abstraction(file_blocks, scratch)
         self.data(file_blocks)
         self.logic(file_blocks)
-        self.user_interactivity(file_blocks)
+        self.user_interactivity(file_blocks, scratch)
         self.parallelization(scratch)
         return {'types': file_blocks}
     
@@ -126,14 +126,22 @@ class Mastery(HairballPlugin):
                     score = 1
         self.concepts['DataRepresentation'] = score
 
-    def user_interactivity(self, file_blocks):
+    def check_mouse(self, scratch):
+        """Check whether there is a block 'go to mouse'"""    
+        for script in self.iter_scripts(scratch):
+            for name, _, block in self.iter_blocks(script.blocks):
+                if name == 'go to %s' and block.args[0] == 'mouse-pointer':
+                    return 1
+        return 0
+
+    def user_interactivity(self, file_blocks, scratch):
         """Assign the User Interactivity skill result"""
         score = 0
         proficiency = {'turn video %s', 'video %s on %s', 'when %s > %s', 
             'set video transparency to %s%%', 'loudness'}
         developing = {'when %s key pressed', 'when this sprite clicked', 
             'mouse down?', 'key %s pressed?', 'ask %s and wait', 
-            'answer' }
+            'answer',  }
         for item in proficiency:
             if file_blocks[item]:
                 self.concepts['UserInteractivity'] = 3
@@ -142,9 +150,12 @@ class Mastery(HairballPlugin):
             if file_blocks[item]:
                 self.concepts['UserInteractivity'] = 2
                 return
-        else:
-            if file_blocks['when @greenFlag clicked']:
-                score = 1
+        if file_blocks['go to %s']:
+            if self.check_mouse(scratch) == 1:
+                self.concepts['UserInteractivity'] = 2
+                return
+        if file_blocks['when @greenFlag clicked']:
+            score = 1
         self.concepts['UserInteractivity'] = score
         
         
