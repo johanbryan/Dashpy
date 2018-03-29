@@ -5,7 +5,7 @@ import os
 import sys
 from imp import load_source
 from optparse import OptionParser
-from .plugins import HairballPlugin
+from plugins import HairballPlugin
 
 
 __version__ = '0.1rc3'
