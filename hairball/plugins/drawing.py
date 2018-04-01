@@ -174,7 +174,10 @@ class Drawing(HairballPlugin):
                 if argument.type.text in self.LOOP_BLOCK:
                     return 1
                 if isinstance(argument.type, kurt.CustomBlockType):
-                    return self.__containCustomLoop(block_list, argument.type.text.replace(' %s', ''))
+                    result = self.__containCustomLoop(block_list, argument.type.text.replace(' %s', ''))
+                    #If doesn't find a loop inside then continue iterating
+                    if result == 1:
+                        return result
         return 0
 
     def __containCustomLoop(self, block_list, target):
@@ -187,5 +190,8 @@ class Drawing(HairballPlugin):
                         if loop_block in name:
                             return 1
                     if isinstance(block.type, kurt.CustomBlockType):
-                        return self.__containCustomLoop(block_list, block.type.text.replace(' %s', ''))
+                        result = self.__containCustomLoop(block_list, block.type.text.replace(' %s', ''))
+                        #If doesn't find a loop inside then continue iterating
+                        if result == 1:
+                            return result
         return 0
