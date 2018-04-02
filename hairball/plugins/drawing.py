@@ -11,7 +11,6 @@ class Drawing(HairballPlugin):
     MAX_MOVEOFARTIST_SCORE = 6
     MAX_NESTEDLOOP_SCORE = 6
     MAX_GEOMETRICFIGURE_SCORE = 6
-
     MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
 
     RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
@@ -111,8 +110,7 @@ class Drawing(HairballPlugin):
                 return int(self.MAX_USEOFCOLOR_SCORE)
             else:
                 return int(self.MAX_USEOFCOLOR_SCORE/2)
-        else:
-            return 0
+        return 0
 
     def __analyzeMoveOfArtist(self, block_list):
         """Plugin that checks if a Scratch project contains motion blocks with different arguments"""
@@ -139,8 +137,7 @@ class Drawing(HairballPlugin):
                     return int(self.MAX_MOVEOFARTIST_SCORE/1.5)
             else:
                 return int(self.MAX_MOVEOFARTIST_SCORE/3)
-        else:
-            return 0
+        return 0
 
     def __differentArgument(self, argument_result):
         """Check number of different arguments per motion block.
@@ -231,14 +228,14 @@ class Drawing(HairballPlugin):
     def __containGeometricFigurePattern(self, block_list, argument_list):
         """Search geometric figure patterns trough loops"""
         #Variable
-        pattern = { 'loop_angle' : 0,
-                    'angle' : 0,
-                    'orientation' : False,
-                    'position' : False }
+        pattern = {'loop_angle' : 0,
+                   'angle' : 0,
+                   'orientation' : False,
+                   'position' : False}
         try:
         #Check argument of loop
             if isinstance(argument_list[0], int):
-                pattern ['loop_angle'] = argument_list[0]
+                pattern['loop_angle'] = argument_list[0]
             #Iteration
             for argument in argument_list[1]:
                 if isinstance(argument, kurt.Block):
@@ -251,9 +248,9 @@ class Drawing(HairballPlugin):
                     if isinstance(argument.type, kurt.CustomBlockType):
                         pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, argument.type.text.replace(' %s', ''))
             if pattern['orientation'] and pattern['position']:
-                if not pattern['loop_angle'] or pattern['loop_angle'] * pattern['angle'] >= 360:
+                if not pattern['loop_angle'] or pattern['loop_angle'] * pattern['angle'] >= self.GEOMETRIC_ANGLE_PATTERN:
                     return 1
-        except TypeError: 
+        except TypeError:
             self.__final_result['Warning'] = 'Scratch project contain empty loops'
         return 0
 
@@ -274,4 +271,3 @@ class Drawing(HairballPlugin):
                     if isinstance(block.type, kurt.CustomBlockType) and target != block.type.text.replace(' %s', ''):
                         pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, block.type.text.replace(' %s', ''))
         return pattern
-
