@@ -43,6 +43,17 @@ class Drawing(HairballPlugin):
                   'repeat %s%s',
                   'forever%s']
 
+    GEOMETRIC_LOOP_PATTERN = ['repeat until %s%s',
+                              'repeat %s%s']
+
+    GEOMETRIC_POSITION_PATTERN = ['move %s steps']
+
+    GEOMETRIC_ORIENTATION_PATTERN = ['turn @turnRight %s degrees',
+                                     'turn @turnLeft %s degrees',
+                                     'point in direction %s']
+
+    GEOMETRIC_ANGLE_PATTERN = 360
+
     def __init__(self):
         """Construct method"""
         super(Drawing, self).__init__()
@@ -66,7 +77,7 @@ class Drawing(HairballPlugin):
             self.__final_result['Use Of Color'] = self.__analyzeUseOfColor(block_list)
             self.__final_result['Move Of Artist'] = self.__analyzeMoveOfArtist(block_list)
             self.__final_result['Nested Loop'] = self.__analyzeNestedLoop(block_list)
-            #self.__final_result['Geometric Figure'] = self.__analyzeGeomtricFigure(block_list)
+            self.__final_result['Geometric Figure'] = self.__analyzeGeometricFigure(block_list)
 
     def finalize(self):
         """Print in command prompt the final results"""
@@ -78,7 +89,7 @@ class Drawing(HairballPlugin):
             self.__final_result['Max Score'] = self.MAX_SCORE
             self.__final_result['Range'] = self.RANGE_NAME[int(score/self.LEVEL_RANGE+self.DIFFICULTY-1)]
         else:
-            self.__final_result['Error'] = 'File does not exist or does not contain a Scratch project'
+            self.__final_result['Error'] = 'File does not exist or contain a Scratch project'
         #Print final result
         print self.__final_result
 
@@ -147,7 +158,7 @@ class Drawing(HairballPlugin):
     def __analyzeNestedLoop(self, block_list):
         """Plugin that checks if a Scratch project contain nested loops"""
         #Variable
-        block_number = 0
+        nested_loop_number = 0
         #Valida si uno de los bloques coincide con los de LOOP_BLOCK.
         #Si coincide busca en los argumentos del bloque otra coincidencia o
         #un CustomBlockType que contenga otra coincidencia
@@ -155,29 +166,32 @@ class Drawing(HairballPlugin):
             for name, block in block_list[row]:
                 for target in self.LOOP_BLOCK:
                     if target in name:
-                        block_number += self.__containNormalLoop(block_list, block.args)
+                        nested_loop_number += self.__containNormalLoop(block_list, block.args)
         #Evalua si el proyecto cumple el criterio Bucle Anidado
-        if block_number == 0:
+        if nested_loop_number == 0:
             return 0
-        elif block_number == 1:
+        elif nested_loop_number == 1:
             return int(self.MAX_NESTEDLOOP_SCORE/2)
         else:
             return int(self.MAX_NESTEDLOOP_SCORE)
 
     def __containNormalLoop(self, block_list, argument_list):
         """Check if a loop contain loops"""
-        for argument in argument_list[1]:
-            if hasattr(argument, '__getitem__'):
-                argument_list = argument
-                argument = argument[0]
-            if isinstance(argument, kurt.Block):
-                if argument.type.text in self.LOOP_BLOCK:
-                    return 1
-                if isinstance(argument.type, kurt.CustomBlockType):
-                    result = self.__containCustomLoop(block_list, argument.type.text.replace(' %s', ''))
-                    #If doesn't find a loop inside then continue iterating
-                    if result == 1:
-                        return result
+        try:
+            for argument in argument_list[1]:
+                if hasattr(argument, '__getitem__'):
+                    argument_list = argument
+                    argument = argument[0]
+                if isinstance(argument, kurt.Block):
+                    if argument.type.text in self.LOOP_BLOCK:
+                        return 1
+                    if isinstance(argument.type, kurt.CustomBlockType):
+                        result = self.__containCustomLoop(block_list, argument.type.text.replace(' %s', ''))
+                        #If doesn't find a loop inside then continue iterating
+                        if result == 1:
+                            return result
+        except TypeError:
+            self.__final_result['Warning'] = 'Scratch project contain empty loops'
         return 0
 
     def __containCustomLoop(self, block_list, target):
@@ -189,9 +203,75 @@ class Drawing(HairballPlugin):
                     for loop_block in self.LOOP_BLOCK:
                         if loop_block in name:
                             return 1
-                    if isinstance(block.type, kurt.CustomBlockType):
+                    if isinstance(block.type, kurt.CustomBlockType) and target != block.type.text.replace(' %s', ''):
                         result = self.__containCustomLoop(block_list, block.type.text.replace(' %s', ''))
                         #If doesn't find a loop inside then continue iterating
                         if result == 1:
                             return result
         return 0
+
+    def __analyzeGeometricFigure(self, block_list):
+        """Check if a Scratch project contain basic geometric figures"""
+        #Variable
+        geometric_figure_number = 0
+        #Search geometric figure patterns trough loops
+        for row in block_list.keys():
+            for name, block in block_list[row]:
+                for target in self.GEOMETRIC_LOOP_PATTERN:
+                    if target in name:
+                        geometric_figure_number += self.__containGeometricFigurePattern(block_list, block.args)
+        #Evalua si el proyecto cumple el criterio Figura Geometrica
+        if geometric_figure_number == 0:
+            return 0
+        elif geometric_figure_number == 1:
+            return int(self.MAX_GEOMETRICFIGURE_SCORE/2)
+        else:
+            return int(self.MAX_GEOMETRICFIGURE_SCORE)
+    
+    def __containGeometricFigurePattern(self, block_list, argument_list):
+        """Search geometric figure patterns trough loops"""
+        #Variable
+        pattern = { 'loop_angle' : 0,
+                    'angle' : 0,
+                    'orientation' : False,
+                    'position' : False }
+        try:
+        #Check argument of loop
+            if isinstance(argument_list[0], int):
+                pattern ['loop_angle'] = argument_list[0]
+            #Iteration
+            for argument in argument_list[1]:
+                if isinstance(argument, kurt.Block):
+                    if argument.type.text in self.GEOMETRIC_POSITION_PATTERN:
+                        pattern['position'] = True
+                    if argument.type.text in self.GEOMETRIC_ORIENTATION_PATTERN:
+                        pattern['orientation'] = True
+                        if pattern['loop_angle'] and isinstance(argument.args[0], int):
+                            pattern['angle'] += argument.args[0]
+                    if isinstance(argument.type, kurt.CustomBlockType):
+                        pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, argument.type.text.replace(' %s', ''))
+            if pattern['orientation'] and pattern['position']:
+                if not pattern['loop_angle'] or pattern['loop_angle'] * pattern['angle'] >= 360:
+                    return 1
+        except TypeError: 
+            self.__final_result['Warning'] = 'Scratch project contain empty loops'
+        return 0
+
+    def __containCustomGeometricFigurePattern(self, block_list, pattern, target):
+        """Search geometric figure patterns trough CustomBlockType"""
+        for row in block_list.keys():
+            #Check if first bock of script row match with the target block
+            if target in block_list[row][0][1].stringify():
+                for name, block in block_list[row]:
+                    for position_block in self.GEOMETRIC_POSITION_PATTERN:
+                        if position_block in name:
+                            pattern['position'] = True
+                    for orientation_block in self.GEOMETRIC_ORIENTATION_PATTERN:
+                        if orientation_block in name:
+                            pattern['orientation'] = True
+                            if pattern['loop_angle'] and isinstance(block.args[0], int):
+                                pattern['angle'] += block.args[0]
+                    if isinstance(block.type, kurt.CustomBlockType) and target != block.type.text.replace(' %s', ''):
+                        pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, block.type.text.replace(' %s', ''))
+        return pattern
+
