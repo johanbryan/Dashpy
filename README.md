@@ -47,6 +47,7 @@ Below are a list of available plugins that can be used as the `-p PLUGIN_NAME` o
 * checks.SaySoundSync (not fully tested)
 * initialization.AttributeInitialization
 * initialization.VariableInitialization (not fully tested)
+* drawing.Drawing (not fully tested)
 
 Note: The output for each plugin is not yet completely standardized. Please
 feel free to file any issues or make improvements and send pull requests.
