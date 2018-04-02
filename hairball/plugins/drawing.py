@@ -271,3 +271,4 @@ class Drawing(HairballPlugin):
                     if isinstance(block.type, kurt.CustomBlockType) and target != block.type.text.replace(' %s', ''):
                         pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, block.type.text.replace(' %s', ''))
         return pattern
+
