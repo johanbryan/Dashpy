@@ -8,9 +8,9 @@ class Drawing(HairballPlugin):
     from PRG (Progracademy) inspired on code.org challenges."""
 
     MAX_USEOFCOLOR_SCORE = 2
-    MAX_MOVEOFARTIST_SCORE = 6
-    MAX_NESTEDLOOP_SCORE = 6
-    MAX_GEOMETRICFIGURE_SCORE = 6
+    MAX_MOVEOFARTIST_SCORE = 2
+    MAX_NESTEDLOOP_SCORE = 2
+    MAX_GEOMETRICFIGURE_SCORE = 2
     MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
 
     RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
@@ -58,7 +58,7 @@ class Drawing(HairballPlugin):
         super(Drawing, self).__init__()
         self.__final_result = {}
 
-    def analyze(self, scratch):
+    def analyze(self, scratch, **kwargs):
         """Run and return the results from the Drawing plugins."""
         #Variable
         block_list = {}
@@ -83,6 +83,11 @@ class Drawing(HairballPlugin):
         if self.__final_result:
             #Variable
             score = reduce(lambda a, b: a+b, self.__final_result.values())
+            #Print max value for each criteria
+            self.__final_result['Max Use Of Color'] = self.MAX_USEOFCOLOR_SCORE
+            self.__final_result['Max Move Of Artist'] = self.MAX_MOVEOFARTIST_SCORE
+            self.__final_result['Max Nested Loop'] = self.MAX_NESTEDLOOP_SCORE
+            self.__final_result['Max Geometric Figure'] = self.MAX_GEOMETRICFIGURE_SCORE
             #Evalutes the range score of Scratch project
             self.__final_result['Score'] = score
             self.__final_result['Max Score'] = self.MAX_SCORE
@@ -108,8 +113,7 @@ class Drawing(HairballPlugin):
         if argument_result:
             if len(argument_result) > 1:
                 return int(self.MAX_USEOFCOLOR_SCORE)
-            else:
-                return int(self.MAX_USEOFCOLOR_SCORE/2)
+            return int(self.MAX_USEOFCOLOR_SCORE/2)
         return 0
 
     def __analyzeMoveOfArtist(self, block_list):
@@ -129,14 +133,10 @@ class Drawing(HairballPlugin):
                         block_result[name] += 1
                         argument_result[name][str(block.args)] += 1
         #Evalua si el proyecto cumple el criterio Movimiento
-        if block_result:
-            if set(block_result.keys()) & set(self.POSITION_BLOCK) and set(block_result.keys()) & set(self.ORIENTATION_BLOCK):
-                if self.__differentArgument(argument_result):
-                    return int(self.MAX_MOVEOFARTIST_SCORE)
-                else:
-                    return int(self.MAX_MOVEOFARTIST_SCORE/1.5)
-            else:
-                return int(self.MAX_MOVEOFARTIST_SCORE/3)
+        if set(block_result.keys()) & set(self.POSITION_BLOCK) and set(block_result.keys()) & set(self.ORIENTATION_BLOCK):
+            if self.__differentArgument(argument_result):
+                return int(self.MAX_MOVEOFARTIST_SCORE)
+            return int(self.MAX_MOVEOFARTIST_SCORE/2)
         return 0
 
     def __differentArgument(self, argument_result):
@@ -147,10 +147,7 @@ class Drawing(HairballPlugin):
         for key_block in argument_result.keys():
             if len(argument_result[key_block]) > 1:
                 block_number += 1
-        if block_number > 1:
-            return True
-        else:
-            return False
+        return (block_number > 1)
 
     def __analyzeNestedLoop(self, block_list):
         """Plugin that checks if a Scratch project contain nested loops"""
@@ -169,8 +166,7 @@ class Drawing(HairballPlugin):
             return 0
         elif nested_loop_number == 1:
             return int(self.MAX_NESTEDLOOP_SCORE/2)
-        else:
-            return int(self.MAX_NESTEDLOOP_SCORE)
+        return int(self.MAX_NESTEDLOOP_SCORE)
 
     def __containNormalLoop(self, block_list, argument_list):
         """Check if a loop contain loops"""
@@ -222,9 +218,8 @@ class Drawing(HairballPlugin):
             return 0
         elif geometric_figure_number == 1:
             return int(self.MAX_GEOMETRICFIGURE_SCORE/2)
-        else:
-            return int(self.MAX_GEOMETRICFIGURE_SCORE)
-    
+        return int(self.MAX_GEOMETRICFIGURE_SCORE)
+
     def __containGeometricFigurePattern(self, block_list, argument_list):
         """Search geometric figure patterns trough loops"""
         #Variable
@@ -271,4 +266,3 @@ class Drawing(HairballPlugin):
                     if isinstance(block.type, kurt.CustomBlockType) and target != block.type.text.replace(' %s', ''):
                         pattern = self.__containCustomGeometricFigurePattern(block_list, pattern, block.type.text.replace(' %s', ''))
         return pattern
-
