@@ -162,11 +162,8 @@ class Drawing(HairballPlugin):
             for name, block in block_list[row]:
                 for target in self.LOOP_BLOCK:
                     if target in name:
-                        nested_loop_number += self.__containNormalLoop(block_list, block.args)
-                for target in self.LOOP_BLOCK:
-                    if target in name:
                         contain_loop = True
-                        break
+                        nested_loop_number += self.__containNormalLoop(block_list, block.args)
         #Evalua si el proyecto cumple el criterio Bucle Anidado
         if contain_loop:
             if nested_loop_number > 2:
@@ -220,10 +217,11 @@ class Drawing(HairballPlugin):
                 for target in self.GEOMETRIC_LOOP_PATTERN:
                     if target in name:
                         geometric_figure_number += self.__containGeometricFigurePattern(block_list, block.args)
-                for target in self.GEOMETRIC_BLOCK:
-                    if target in name:
-                        contain_geometric_block = True
-                        break
+                if not contain_geometric_block:
+                    for target in self.GEOMETRIC_BLOCK:
+                        if target in name:
+                            contain_geometric_block = True
+                            break
         #Evalua si el proyecto cumple el criterio Figura Geometrica
         if contain_geometric_block:
             if geometric_figure_number > 2:
