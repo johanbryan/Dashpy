@@ -7,16 +7,16 @@ class Drawing(HairballPlugin):
     """This class provides plugins for Fascinating Animate Drawing criterias
     from PRG (Progracademy) inspired on code.org challenges."""
 
-    MAX_USEOFCOLOR_SCORE = 2
-    MAX_MOVEOFARTIST_SCORE = 2
-    MAX_NESTEDLOOP_SCORE = 2
-    MAX_GEOMETRICFIGURE_SCORE = 2
-    MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
+    #MAX_USEOFCOLOR_SCORE = 2
+    #MAX_MOVEOFARTIST_SCORE = 2
+    #MAX_NESTEDLOOP_SCORE = 2
+    #MAX_GEOMETRICFIGURE_SCORE = 2
+    #MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
 
-    RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
+    #RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
 
-    DIFFICULTY = 0.5 #0 = Easy, 0.5 = Normal, 1 = Hard
-    LEVEL_RANGE = float(MAX_SCORE)/len(RANGE_NAME)
+    #DIFFICULTY = 0.5 0 = Easy, 0.5 = Normal, 1 = Hard
+    #LEVEL_RANGE = float(MAX_SCORE)/len(RANGE_NAME)
 
     COLOR_BLOCK = ['set pen color to %s',
                    'change pen color by %s',
@@ -51,6 +51,8 @@ class Drawing(HairballPlugin):
                                      'turn @turnLeft %s degrees',
                                      'point in direction %s']
 
+    GEOMETRIC_BLOCK = GEOMETRIC_LOOP_PATTERN + GEOMETRIC_POSITION_PATTERN + GEOMETRIC_ORIENTATION_PATTERN
+
     GEOMETRIC_ANGLE_PATTERN = 360
 
     def __init__(self):
@@ -84,14 +86,14 @@ class Drawing(HairballPlugin):
             #Variable
             score = reduce(lambda a, b: a+b, self.__final_result.values())
             #Print max value for each criteria
-            self.__final_result['Max Use Of Color'] = self.MAX_USEOFCOLOR_SCORE
-            self.__final_result['Max Move Of Artist'] = self.MAX_MOVEOFARTIST_SCORE
-            self.__final_result['Max Nested Loop'] = self.MAX_NESTEDLOOP_SCORE
-            self.__final_result['Max Geometric Figure'] = self.MAX_GEOMETRICFIGURE_SCORE
+            #self.__final_result['Max Use Of Color'] = self.MAX_USEOFCOLOR_SCORE
+            #self.__final_result['Max Move Of Artist'] = self.MAX_MOVEOFARTIST_SCORE
+            #self.__final_result['Max Nested Loop'] = self.MAX_NESTEDLOOP_SCORE
+            #self.__final_result['Max Geometric Figure'] = self.MAX_GEOMETRICFIGURE_SCORE
             #Evalutes the range score of Scratch project
             self.__final_result['Score'] = score
-            self.__final_result['Max Score'] = self.MAX_SCORE
-            self.__final_result['Range'] = self.RANGE_NAME[int(score/self.LEVEL_RANGE+self.DIFFICULTY-1)]
+            #self.__final_result['Max Score'] = self.MAX_SCORE
+            #self.__final_result['Range'] = self.RANGE_NAME[int(score/self.LEVEL_RANGE+self.DIFFICULTY-1)]
         else:
             self.__final_result['Error'] = 'File does not exist or contain a Scratch project'
         #Print final result
@@ -104,17 +106,14 @@ class Drawing(HairballPlugin):
         argument_result = Counter()
         #Valida si uno de los bloques coincide con los de COLOR_BLOCK.
         #Si coincide almacena los parametros del bloque en argument_results
-        for row in block_list.keys():
-            for name, block in block_list[row]:
-                for target in self.COLOR_BLOCK:
-                    if target in name:
-                        argument_result[str(block.args)] += 1
+        for name, block in block_list.values():
+            for target in self.COLOR_BLOCK:
+                if target in name:
+                    argument_result[str(block.args)] += 1
         #Evalua si el proyecto cumple el criterio Color
-        if argument_result:
-            if len(argument_result) > 1:
-                return int(self.MAX_USEOFCOLOR_SCORE)
-            return int(self.MAX_USEOFCOLOR_SCORE/2)
-        return 0
+        if len(argument_result) > 3:
+            return 3
+        return len(argument_result)
 
     def __analyzeMoveOfArtist(self, block_list):
         """Plugin that checks if a Scratch project contains motion blocks with different arguments"""
@@ -126,17 +125,18 @@ class Drawing(HairballPlugin):
             argument_result[block] = Counter()
         #Valida si uno de los bloques coincide con los de MOVE_BLOCK.
         #Si coincide almacena el bloque en block_result y los parametros en argument_result
-        for row in block_list.keys():
-            for name, block in block_list[row]:
-                for target in self.MOTION_BLOCK:
-                    if target in name:
-                        block_result[name] += 1
-                        argument_result[name][str(block.args)] += 1
+        for name, block in block_list.values():
+            for target in self.MOTION_BLOCK:
+                if target in name:
+                    block_result[name] += 1
+                    argument_result[name][str(block.args)] += 1
         #Evalua si el proyecto cumple el criterio Movimiento
-        if set(block_result.keys()) & set(self.POSITION_BLOCK) and set(block_result.keys()) & set(self.ORIENTATION_BLOCK):
-            if self.__differentArgument(argument_result):
-                return int(self.MAX_MOVEOFARTIST_SCORE)
-            return int(self.MAX_MOVEOFARTIST_SCORE/2)
+        if(block_result):
+            if set(block_result.keys()) & set(self.POSITION_BLOCK) and set(block_result.keys()) & set(self.ORIENTATION_BLOCK):
+                if self.__differentArgument(argument_result):
+                    return 3
+                return 2
+            return 1
         return 0
 
     def __differentArgument(self, argument_result):
