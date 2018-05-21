@@ -14,7 +14,6 @@ class Drawing(HairballPlugin):
     #MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
 
     #RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
-
     #DIFFICULTY = 0.5 0 = Easy, 0.5 = Normal, 1 = Hard
     #LEVEL_RANGE = float(MAX_SCORE)/len(RANGE_NAME)
 
@@ -106,10 +105,11 @@ class Drawing(HairballPlugin):
         argument_result = Counter()
         #Valida si uno de los bloques coincide con los de COLOR_BLOCK.
         #Si coincide almacena los parametros del bloque en argument_results
-        for name, block in block_list.values():
-            for target in self.COLOR_BLOCK:
-                if target in name:
-                    argument_result[str(block.args)] += 1
+        for row in block_list.keys():
+            for name, block in block_list[row]:
+                for target in self.COLOR_BLOCK:
+                    if target in name:
+                        argument_result[str(block.args)] += 1
         #Evalua si el proyecto cumple el criterio Color
         if len(argument_result) > 3:
             return 3
@@ -125,11 +125,12 @@ class Drawing(HairballPlugin):
             argument_result[block] = Counter()
         #Valida si uno de los bloques coincide con los de MOVE_BLOCK.
         #Si coincide almacena el bloque en block_result y los parametros en argument_result
-        for name, block in block_list.values():
-            for target in self.MOTION_BLOCK:
-                if target in name:
-                    block_result[name] += 1
-                    argument_result[name][str(block.args)] += 1
+        for row in block_list.keys():
+            for name, block in block_list[row]:
+                for target in self.MOTION_BLOCK:
+                    if target in name:
+                        block_result[name] += 1
+                        argument_result[name][str(block.args)] += 1
         #Evalua si el proyecto cumple el criterio Movimiento
         if(block_result):
             if set(block_result.keys()) & set(self.POSITION_BLOCK) and set(block_result.keys()) & set(self.ORIENTATION_BLOCK):
@@ -152,6 +153,7 @@ class Drawing(HairballPlugin):
     def __analyzeNestedLoop(self, block_list):
         """Plugin that checks if a Scratch project contain nested loops"""
         #Variable
+        contain_loop = False
         nested_loop_number = 0
         #Valida si uno de los bloques coincide con los de LOOP_BLOCK.
         #Si coincide busca en los argumentos del bloque otra coincidencia o
@@ -161,12 +163,16 @@ class Drawing(HairballPlugin):
                 for target in self.LOOP_BLOCK:
                     if target in name:
                         nested_loop_number += self.__containNormalLoop(block_list, block.args)
+                for target in self.LOOP_BLOCK:
+                    if target in name:
+                        contain_loop = True
+                        break
         #Evalua si el proyecto cumple el criterio Bucle Anidado
-        if nested_loop_number == 0:
-            return 0
-        elif nested_loop_number == 1:
-            return int(self.MAX_NESTEDLOOP_SCORE/2)
-        return int(self.MAX_NESTEDLOOP_SCORE)
+        if contain_loop:
+            if nested_loop_number > 2:
+                return 3
+            return nested_loop_number + 1
+        return 0
 
     def __containNormalLoop(self, block_list, argument_list):
         """Check if a loop contain loops"""
@@ -206,6 +212,7 @@ class Drawing(HairballPlugin):
     def __analyzeGeometricFigure(self, block_list):
         """Check if a Scratch project contain basic geometric figures"""
         #Variable
+        contain_geometric_block = False
         geometric_figure_number = 0
         #Search geometric figure patterns trough loops
         for row in block_list.keys():
@@ -213,12 +220,16 @@ class Drawing(HairballPlugin):
                 for target in self.GEOMETRIC_LOOP_PATTERN:
                     if target in name:
                         geometric_figure_number += self.__containGeometricFigurePattern(block_list, block.args)
+                for target in self.GEOMETRIC_BLOCK:
+                    if target in name:
+                        contain_geometric_block = True
+                        break
         #Evalua si el proyecto cumple el criterio Figura Geometrica
-        if geometric_figure_number == 0:
-            return 0
-        elif geometric_figure_number == 1:
-            return int(self.MAX_GEOMETRICFIGURE_SCORE/2)
-        return int(self.MAX_GEOMETRICFIGURE_SCORE)
+        if contain_geometric_block:
+            if geometric_figure_number > 2:
+                return 3
+            return geometric_figure_number + 1
+        return 0
 
     def __containGeometricFigurePattern(self, block_list, argument_list):
         """Search geometric figure patterns trough loops"""
