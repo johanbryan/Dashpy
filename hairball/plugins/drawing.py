@@ -74,7 +74,7 @@ class Drawing(HairballPlugin):
             score = reduce(lambda a, b: a+b, self.__final_result.values())
             #Evalutes the range score of Scratch project
             self.__final_result['Score'] = score
-            self.__final_result['Range'] = round(score/3)
+            self.__final_result['Max Score'] = 12
         else:
             self.__final_result['Error'] = 'File does not exist or contain a Scratch project'
         #Print final result
