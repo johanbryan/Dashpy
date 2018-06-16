@@ -1,21 +1,10 @@
 from collections import Counter
-
 import kurt
 from hairball.plugins import HairballPlugin
 
 class Drawing(HairballPlugin):
     """This class provides plugins for Fascinating Animate Drawing criterias
     from PRG (Progracademy) inspired on code.org challenges."""
-
-    #MAX_USEOFCOLOR_SCORE = 2
-    #MAX_MOVEOFARTIST_SCORE = 2
-    #MAX_NESTEDLOOP_SCORE = 2
-    #MAX_GEOMETRICFIGURE_SCORE = 2
-    #MAX_SCORE = MAX_USEOFCOLOR_SCORE + MAX_MOVEOFARTIST_SCORE + MAX_NESTEDLOOP_SCORE + MAX_GEOMETRICFIGURE_SCORE
-
-    #RANGE_NAME = ['Basic', 'Developing', 'Proficiency']
-    #DIFFICULTY = 0.5 0 = Easy, 0.5 = Normal, 1 = Hard
-    #LEVEL_RANGE = float(MAX_SCORE)/len(RANGE_NAME)
 
     COLOR_BLOCK = ['set pen color to %s',
                    'change pen color by %s',
@@ -51,7 +40,6 @@ class Drawing(HairballPlugin):
                                      'point in direction %s']
 
     GEOMETRIC_BLOCK = GEOMETRIC_LOOP_PATTERN + GEOMETRIC_POSITION_PATTERN + GEOMETRIC_ORIENTATION_PATTERN
-
     GEOMETRIC_ANGLE_PATTERN = 360
 
     def __init__(self):
@@ -84,15 +72,9 @@ class Drawing(HairballPlugin):
         if self.__final_result:
             #Variable
             score = reduce(lambda a, b: a+b, self.__final_result.values())
-            #Print max value for each criteria
-            #self.__final_result['Max Use Of Color'] = self.MAX_USEOFCOLOR_SCORE
-            #self.__final_result['Max Move Of Artist'] = self.MAX_MOVEOFARTIST_SCORE
-            #self.__final_result['Max Nested Loop'] = self.MAX_NESTEDLOOP_SCORE
-            #self.__final_result['Max Geometric Figure'] = self.MAX_GEOMETRICFIGURE_SCORE
             #Evalutes the range score of Scratch project
             self.__final_result['Score'] = score
-            #self.__final_result['Max Score'] = self.MAX_SCORE
-            #self.__final_result['Range'] = self.RANGE_NAME[int(score/self.LEVEL_RANGE+self.DIFFICULTY-1)]
+            self.__final_result['Range'] = round(score/3)
         else:
             self.__final_result['Error'] = 'File does not exist or contain a Scratch project'
         #Print final result
