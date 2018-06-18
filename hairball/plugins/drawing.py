@@ -62,10 +62,13 @@ class Drawing(HairballPlugin):
                     block_list[script_number].append((name, block))
         #Run plugins
         if block_list:
-            self.__final_result['Use Of Color'] = self.__analyzeUseOfColor(block_list)
-            self.__final_result['Move Of Artist'] = self.__analyzeMoveOfArtist(block_list)
-            self.__final_result['Nested Loop'] = self.__analyzeNestedLoop(block_list)
-            self.__final_result['Geometric Figure'] = self.__analyzeGeometricFigure(block_list)
+            try:
+                self.__final_result['Use Of Color'] = self.__analyzeUseOfColor(block_list)
+                self.__final_result['Move Of Artist'] = self.__analyzeMoveOfArtist(block_list)
+                self.__final_result['Nested Loop'] = self.__analyzeNestedLoop(block_list)
+                self.__final_result['Geometric Figure'] = self.__analyzeGeometricFigure(block_list)
+            except:
+                self.__final_result = {}
 
     def finalize(self):
         """Print in command prompt the final results"""
@@ -77,7 +80,7 @@ class Drawing(HairballPlugin):
             self.__final_result['Error'] = 'None'
         else:
             self.__final_result['Score'] = 0
-            self.__final_result['Error'] = 'File does not exist or contain a Scratch project'
+            self.__final_result['Error'] = 'File does not exist or contain empty scripts'
 
         self.__final_result['Max Score'] = 12
         
