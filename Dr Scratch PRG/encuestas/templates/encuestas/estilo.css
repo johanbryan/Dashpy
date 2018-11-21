@@ -1,84 +1,57 @@
 /* Style the header with a grey background and some padding */
 .header {
     overflow: hidden;
-    padding: 5px 10px;
+    padding: 5px 15px;
+    position: relative;
+    top: 0;
   }
   
-  /* Style the header links */
-  .header a {
-    float: left;
-    color: black;
-    text-align: center;
-    padding: 12px;
-    text-decoration: none;
-    font-size: 18px;
-    line-height: 25px;
-    border-radius: 4px;
-  }
-  
-  /* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
-  .header a.logo {
-    font-size: 25px;
-    font-weight: bold;
-  }
-  
-  /* Change the background color on mouse-over */
-  .header a:hover {
-    background-color: rgb(182, 209, 236);
-    color: white;
-  }
-  
-  /* Style the active/current link*/
-  .header a.active {
-    background-color: rgb(182, 209, 236);
-    color: white;
-  }
   
   /* Float the link section to the right */
   .header-right {
     float: right;
   }
   
-  /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
-  @media screen and (max-width: 500px) {
-    .header a {
-      float: none;
-      display: block;
-      text-align: left;
-    }
-    .header-right {
-      float: none;
-    }
-  }
 
-table {
-    
+
+table { 
     border-collapse: collapse;
-    width: 100%;
-    
-    
+    width: 100%; 
+  /*  border: 2px solid yellow; */
 }
 
 th, td {
     padding: 8px;
-    text-align: left;
-    
+    text-align: center;   
 }
 
 tr:hover {
     page-break-after: avoid;
     text-align: center;
-    background-color:#f5f5f5;
+    background-color: lightyellow;
 }
 
 /* circulos de colores de nivel */
-.dot {
+.dot1, .dot2, .dot3, .dot4, .dot5, .dot6, .dot7 {
     height: 25px;
     width: 25px;
     background-color: #345353;
     border-radius: 50%;
     display: inline-block;
   }
+
+  .dot1, .dot5 {
+    background-color: yellow;
+  }
+
+  .dot2, .dot4, .dot6 {
+    background-color: lightgreen;
+  }
+
+  .dot3, .dot7 {
+    background-color: green;
+  }
+
 
   /* la tabla de los criterios analizados */
   .criterios {
@@ -105,7 +78,7 @@ tr:hover {
   /* la tabla puntuacion */
   .puntuacion {
     position: fixed;
-    bottom: 220px;
+    bottom: 40px;
     left: 25;
     width: 500px;
     border: 2px solid yellow;
@@ -124,7 +97,7 @@ tr:hover {
     bottom: 40px;
     right: 25px;
     width: 670px;
-    height: 130px;
+    height: 100px;
     border: 2px solid yellow;
     padding: 5px;
     border-radius: 3%;
@@ -138,11 +111,13 @@ tr:hover {
     text-align: center;
   }
 
+  /* linea de nombre de criterios en tabla criterios*/
+  .nombrecriterio {
+    text-align: left;
+    position: relative;
+  }
   /* empiezan todos lo elementos id*/
   /* la palabra que esta en la tabla puntuacion */
-  #palabra {
-    color:blue;
-  }
 
   /* la linea que esta en la tabla puntuacion al lado de imagen*/
   #linea {
@@ -150,7 +125,7 @@ tr:hover {
   }
 
   #tips {
-    background-color: rgb(236, 211, 173); 
+    background-color: lightgoldenrodyellow; 
     height: 150px;
     text-align: center;
     border-radius: 2%;
@@ -166,9 +141,57 @@ tr:hover {
   }
 
   #monito {
-    position: absolute;
+    position: relative;
     left: 15;
+    top: 230;
     width: 150;
     height: 150;
-    z-index: -1;
+    z-index: 1;
   }
+
+  #facebook ,#instagram ,#linkedin ,#twitter, #mail, #preguntas  {
+    width: 50;
+    height: 50;
+    
+  }
+
+  /* agregando un tooltip a la pagina web*/
+  /* Tooltip text */
+.nombrecriterio .tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.nombrecriterio .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.nombrecriterio:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
