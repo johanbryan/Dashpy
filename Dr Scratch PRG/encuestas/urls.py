@@ -15,4 +15,5 @@ urlpatterns = [
 
     url(r'^(?P<pregunta_id>[0-9]+)/voto/$', views.voto, name='voto'),
 
+    url(r'^perceptivos/$', views.perceptivos, name='perceptivos'),
     ]

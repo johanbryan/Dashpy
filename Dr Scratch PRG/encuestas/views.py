@@ -14,6 +14,9 @@ from .models import Pregunta
 
 # Create your views here.
 
+def perceptivos(request):
+    return render(request, 'encuestas/perceptivos.html')
+
 def index(request):
     ultima_pregunta_lista = Pregunta.objects.order_by('-publicacionfecha')[:5]
     template = loader.get_template('encuestas/index.html')

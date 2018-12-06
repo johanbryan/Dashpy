@@ -1,0 +1,197 @@
+/* Style the header with a grey background and some padding */
+.header {
+    overflow: hidden;
+    padding: 5px 15px;
+    position: relative;
+    top: 0;
+  }
+  
+  
+  /* Float the link section to the right */
+  .header-right {
+    float: right;
+  }
+  
+
+
+table { 
+    border-collapse: collapse;
+    width: 100%; 
+  /*  border: 2px solid yellow; */
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;   
+}
+
+tr:hover {
+    page-break-after: avoid;
+    text-align: center;
+    background-color: lightyellow;
+}
+
+/* circulos de colores de nivel */
+.dot1, .dot2, .dot3, .dot4, .dot5, .dot6, .dot7 {
+    height: 25px;
+    width: 25px;
+    background-color: #345353;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot1, .dot5 {
+    background-color: yellow;
+  }
+
+  .dot2, .dot4, .dot6 {
+    background-color: lightgreen;
+  }
+
+  .dot3, .dot7 {
+    background-color: green;
+  }
+
+
+  /* la tabla de los criterios analizados */
+  .criterios {
+    position: fixed;
+    right: 25px;
+    bottom: 200px;
+    width: 670px;
+    padding: 5px;
+    border: 2px solid yellow;
+    border-radius: 3%;
+  }
+
+  /* la tabla de las mejores practicas*/
+  .practicas {
+    position: fixed;
+    width: 500px;
+    bottom: 40px;
+    left: 25px;
+    border: 2px solid yellow;
+    padding: 5px;
+    border-radius: 3%;
+  }
+
+  /* la tabla puntuacion */
+  .puntuacion {
+    position: fixed;
+    bottom: 40px;
+    left: 25;
+    width: 500px;
+    border: 2px solid yellow;
+    padding: 5px;
+    border-radius: 3%;
+  }
+
+  /* comentario en la tabla criterios */
+  .comenta{
+    text-align: right;
+  }
+
+  /* la tabla de compartir*/
+  .compartir{
+    position: fixed;
+    bottom: 40px;
+    right: 25px;
+    width: 670px;
+    height: 100px;
+    border: 2px solid yellow;
+    padding: 5px;
+    border-radius: 3%;
+  }
+
+  /* aqui esta la configuracion del footer*/
+  .footer { 
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    text-align: center;
+  }
+
+  /* linea de nombre de criterios en tabla criterios*/
+  .nombrecriterio {
+    text-align: left;
+    position: relative;
+  }
+  /* empiezan todos lo elementos id*/
+  /* la palabra que esta en la tabla puntuacion */
+
+  /* la linea que esta en la tabla puntuacion al lado de imagen*/
+  #linea {
+    text-align : right;
+  }
+
+  #tips {
+    background-color: lightgoldenrodyellow; 
+    height: 150px;
+    text-align: center;
+    border-radius: 2%;
+  }
+
+  #logo {
+    width: 20%;
+    height: 10%;
+  }
+
+  #amigos {
+    text-align: center;
+  }
+
+  #monito {
+    position: relative;
+    left: 15;
+    top: 230;
+    width: 150;
+    height: 150;
+    z-index: 1;
+  }
+
+  #facebook ,#instagram ,#linkedin ,#twitter, #mail, #preguntas  {
+    width: 50;
+    height: 50;
+    
+  }
+
+  /* agregando un tooltip a la pagina web*/
+  /* Tooltip text */
+.nombrecriterio .tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.nombrecriterio .tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.nombrecriterio:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
