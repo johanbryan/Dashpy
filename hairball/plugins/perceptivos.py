@@ -51,4 +51,4 @@ class Dialogos(HairballPlugin):
 
     def __contardialogosbroadcast(self):
 
-    def __retornarcolor(self):        
+    def __retornarcolor(self):        #class Personajes(HairballPlugin):
