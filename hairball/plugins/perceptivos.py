@@ -230,17 +230,7 @@ class Mecanica(HairballPlugin):
             right after an user action (press key or mouse click)
         """
         actions = []
-    def analyze(self, scratch):
-        """Run and return the results of the Mecanica plugin."""          
-        all_scripts = list(self.iter_scripts(scratch))
-        self.backdropWhenGreenFlag = self.backdropGreenFlag(all_scripts)
-        self.spritesHidden = self.getHiddenSprites(scratch)
-        #ToDo: Check if there are variables and lists and if so check if they are hidden when launched
-        self.actions = self.getActions(scratch)
-        self.spritesShown = self.getShownSprites(scratch)
-        #ToDo: Check if there are variables and lists and if so check if they are shown after actions
-
-#class Personajes(HairballPlugin):
+        for sprite in scratch.sprites:
             if sprite not in self.spritesHidden: 
                 for script in sprite.scripts:
                     if (self.script_start_type(script) == self.HAT_MOUSE
