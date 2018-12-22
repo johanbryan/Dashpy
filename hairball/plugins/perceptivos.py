@@ -79,7 +79,7 @@ class Eventos(HairballPlugin):
         print ('cantidad de eventos registrados',self.eventos)
         return 
 
-     def finalize(self):
+    def finalize(self):
         if self.eventos >= 3:
             self.color = "green"
             self.comentario = "Excelente"
