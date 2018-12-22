@@ -21,18 +21,34 @@ class Dialogos(HairballPlugin):
         super(Dialogos, self).__init__()
         self.color = ""
         self.comentario = "" 
-
+        self.dialogos = 0
 
     def analyze(self,scratch):
         """cuenta los bloques say"""
         file_blocks = Counter()
-        dialogos = 0
+        self.dialogos = 0
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("say"):
-                   dialogos += 1  
-        print ('cantidad de dialogos registrados',dialogos)
-        return dialogos
+                   self.dialogos += 1  
+        print ('cantidad de dialogos registrados',self.dialogos)
+        return 
+
+    def finalize(self):
+        if self.dialogos >= 3:
+            self.color = "dark green"
+            self.comentario = "Excelente"
+        elif self.dialogos == 2:
+            self.color = "light green"
+            self.comentario = "Muy Bien"
+        elif self.dialogos == 1:
+            self.color = "yellow"
+            self.comentario = "Bien"
+        else:        
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
+        print (self.color,self.comentario)    
+
 
 class Eventos(HairballPlugin):
     """
