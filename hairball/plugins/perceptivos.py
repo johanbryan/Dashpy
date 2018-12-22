@@ -239,6 +239,9 @@ class Mecanica(HairballPlugin):
         self.spritesHidden = []
         self.spritesShown = 0
         self.actions = []
+        self.color = ""
+        self.comentario = "" 
+
 
     def finalize(self):
         """Output whether the project seems to have Mecanica instructions"""
@@ -247,8 +250,12 @@ class Mecanica(HairballPlugin):
             and self.spritesShown >0
             and len(self.actions) > 0):
             print "El juego parace tener instruciones al comienzo"
+            self.color = "dark green"
+            self.comentario = "Excelente"
         else:
             print "El juego no parece tener instruciones al comienzo"
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
 
     def backdropGreenFlag (self, all_scripts):
         """
