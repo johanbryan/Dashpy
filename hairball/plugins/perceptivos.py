@@ -122,8 +122,6 @@ class Puntuacion(HairballPlugin):
                 if not name.find("change"):
                    self.puntuacion += 1  
         print ('cantidad de puntuacion registrados',puntuacion)
-        if self.puntuacion > 0:
-            print("si existe puntuacion entonces el criterio aplica")
         return 
 
          def finalize(self):
