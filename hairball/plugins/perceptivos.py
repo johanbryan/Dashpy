@@ -67,18 +67,33 @@ class Eventos(HairballPlugin):
         super(Eventos, self).__init__()
         self.color = ""
         self.comentario = "" 
-
+        self.eventos
 
     def analyze(self,scratch):
         """cuenta los bloques when"""
         file_blocks = Counter()
-        eventos = 0
+        self.eventos = 0
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("when"):
-                   eventos += 1  
-        print ('cantidad de eventos registrados',eventos)
-        return eventos
+                   self.eventos += 1  
+        print ('cantidad de eventos registrados',self.eventos)
+        return 
+
+     def finalize(self):
+        if self.eventos >= 3:
+            self.color = "dark green"
+            self.comentario = "Excelente"
+        elif self.eventos == 2:
+            self.color = "light green"
+            self.comentario = "Muy Bien"
+        elif self.eventos == 1:
+            self.color = "yellow"
+            self.comentario = "Bien"
+        else:        
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
+        print (self.color,self.comentario)  
 
 class Puntuacion(HairballPlugin):
     """
