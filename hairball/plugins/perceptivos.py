@@ -198,20 +198,26 @@ class Objetivo(HairballPlugin):
     def __init__(self):
         super(Objetivo, self).__init__()
         self.total = 0
+        self.color = ""
+        self.comentario = "" 
 
     def finalize(self):
         """Output whether the project seems to end or not."""
         if self.total > 0:
             print "El juego persigue un Objetivo que lo finaliza"
+            self.color = "dark green"
+            self.comentario = "Excelente"
         else:
             print "El juego no tiene un Objetivo claro que lo culmina"
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
 
     def analyze(self, scratch):
         """Run and return the results of the Ending plugin."""          
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
-                if name == "stop %s":
-                    self.total 
+                if name.find("stop"):
+                    self.total += 1
                     all_scripts = list(self.iter_scripts(scratch))
 
 class Mecanica(HairballPlugin):
