@@ -123,7 +123,7 @@ class Puntuacion(HairballPlugin):
         print ('cantidad de puntuacion registrados',self.puntuacion)
         return 
 
-         def finalize(self):
+    def finalize(self):
         if self.puntuacion >= 3:
             self.color = "green"
             self.comentario = "Excelente"
@@ -167,7 +167,7 @@ class Acciones(HairballPlugin):
         print ('cantidad de acciones registrados',self.acciones)
         return 
 
-         def finalize(self):
+    def finalize(self):
         if self.acciones >= 3:
             self.color = "green"
             self.comentario = "Excelente"
