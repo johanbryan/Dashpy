@@ -49,7 +49,6 @@ class Dialogos(HairballPlugin):
             self.comentario = "No Encontrado o No aplica"
         print (self.color,self.comentario)    
 
-
 class Eventos(HairballPlugin):
     """
         Este plugin verifica y cuenta cuantos eventos bloques de when
@@ -121,7 +120,7 @@ class Puntuacion(HairballPlugin):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("change"):
                    self.puntuacion += 1  
-        print ('cantidad de puntuacion registrados',puntuacion)
+        print ('cantidad de puntuacion registrados',self.puntuacion)
         return 
 
          def finalize(self):
@@ -156,18 +155,32 @@ class Acciones(HairballPlugin):
         super(Acciones, self).__init__()
         self.color = ""
         self.comentario = "" 
-
+        self.acciones
 
     def analyze(self,scratch):
         """cuenta los bloques move"""
         file_blocks = Counter()
-        acciones = 0
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("move"):
-                   acciones += 1  
-        print ('cantidad de acciones registrados',acciones)
-        return acciones
+                   self.acciones += 1  
+        print ('cantidad de acciones registrados',self.acciones)
+        return 
+
+         def finalize(self):
+        if self.acciones >= 3:
+            self.color = "dark green"
+            self.comentario = "Excelente"
+        elif self.acciones == 2:
+            self.color = "light green"
+            self.comentario = "Muy Bien"
+        elif self.acciones == 1:
+            self.color = "yellow"
+            self.comentario = "Bien"
+        else:        
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
+        print (self.color,self.comentario)  
 
 class Objetivo(HairballPlugin):
     """
