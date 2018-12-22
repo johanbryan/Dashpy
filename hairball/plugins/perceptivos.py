@@ -14,7 +14,7 @@ class Dialogos(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
     def __init__(self):
         """ el metodo constructor """
@@ -36,7 +36,7 @@ class Dialogos(HairballPlugin):
 
     def finalize(self):
         if self.dialogos >= 3:
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         elif self.dialogos == 2:
             self.color = "light green"
@@ -59,7 +59,7 @@ class Eventos(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
     def __init__(self):
         """ el metodo constructor """
@@ -81,7 +81,7 @@ class Eventos(HairballPlugin):
 
      def finalize(self):
         if self.eventos >= 3:
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         elif self.eventos == 2:
             self.color = "light green"
@@ -104,7 +104,7 @@ class Puntuacion(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
     def __init__(self):
         """ el metodo constructor """
@@ -125,7 +125,7 @@ class Puntuacion(HairballPlugin):
 
          def finalize(self):
         if self.puntuacion >= 3:
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         elif self.puntuacion == 2:
             self.color = "light green"
@@ -148,7 +148,7 @@ class Acciones(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
     def __init__(self):
         """ el metodo constructor """
@@ -169,7 +169,7 @@ class Acciones(HairballPlugin):
 
          def finalize(self):
         if self.acciones >= 3:
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         elif self.acciones == 2:
             self.color = "light green"
@@ -192,7 +192,7 @@ class Objetivo(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
 
     def __init__(self):
@@ -205,7 +205,7 @@ class Objetivo(HairballPlugin):
         """Output whether the project seems to end or not."""
         if self.total > 0:
             print "El juego persigue un Objetivo que lo finaliza"
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         else:
             print "El juego no tiene un Objetivo claro que lo culmina"
@@ -230,7 +230,7 @@ class Mecanica(HairballPlugin):
         this plugin checks and counts how many characters have blocks of dialog say
         returns color yellow if it finds one character with say
         returns color light green if it finds two character with say
-        returns color dark green if it finds three or more characters with say
+        returns color green if it finds three or more characters with say
     """
 
     def __init__(self):
@@ -250,7 +250,7 @@ class Mecanica(HairballPlugin):
             and self.spritesShown >0
             and len(self.actions) > 0):
             print "El juego parace tener instruciones al comienzo"
-            self.color = "dark green"
+            self.color = "green"
             self.comentario = "Excelente"
         else:
             print "El juego no parece tener instruciones al comienzo"
