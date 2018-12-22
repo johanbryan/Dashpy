@@ -112,20 +112,34 @@ class Puntuacion(HairballPlugin):
         super(Puntuacion, self).__init__()
         self.color = ""
         self.comentario = "" 
-
+        self.puntuacion = 0
 
     def analyze(self,scratch):
         """cuenta los bloques change by"""
         file_blocks = Counter()
-        puntuacion = 0
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("change"):
-                   puntuacion += 1  
+                   self.puntuacion += 1  
         print ('cantidad de puntuacion registrados',puntuacion)
-        if puntuacion > 0:
+        if self.puntuacion > 0:
             print("si existe puntuacion entonces el criterio aplica")
-        return puntuacion
+        return 
+
+         def finalize(self):
+        if self.puntuacion >= 3:
+            self.color = "dark green"
+            self.comentario = "Excelente"
+        elif self.puntuacion == 2:
+            self.color = "light green"
+            self.comentario = "Muy Bien"
+        elif self.puntuacion == 1:
+            self.color = "yellow"
+            self.comentario = "Bien"
+        else:        
+            self.color = "white"
+            self.comentario = "No Encontrado o No aplica"
+        print (self.color,self.comentario)  
 
 class Acciones(HairballPlugin):
     """
