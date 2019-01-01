@@ -30,8 +30,7 @@ class Dialogos(HairballPlugin):
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("say"):
-                   self.dialogos += 1  
-        print ('cantidad de dialogos registrados',self.dialogos)
+                   self.dialogos += 1          
         return 
 
     def finalize(self):
@@ -47,8 +46,10 @@ class Dialogos(HairballPlugin):
         else:        
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
-        print (self.color,self.comentario)    
-
+        print (self.color)
+        print (self.comentario)
+        print (str(self.dialogos))    
+    
 class Eventos(HairballPlugin):
     """
         Este plugin verifica y cuenta cuantos eventos bloques de when
@@ -66,17 +67,15 @@ class Eventos(HairballPlugin):
         super(Eventos, self).__init__()
         self.color = ""
         self.comentario = "" 
-        self.eventos
+        self.eventos = 0
 
     def analyze(self,scratch):
         """cuenta los bloques when"""
         file_blocks = Counter()
-        self.eventos = 0
         for script in self.iter_scripts(scratch):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("when"):
                    self.eventos += 1  
-        print ('cantidad de eventos registrados',self.eventos)
         return 
 
     def finalize(self):
@@ -92,7 +91,9 @@ class Eventos(HairballPlugin):
         else:        
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
-        print (self.color,self.comentario)  
+        print (self.color)
+        print (self.comentario)
+        print (str(self.eventos))   
 
 class Puntuacion(HairballPlugin):
     """
@@ -120,7 +121,6 @@ class Puntuacion(HairballPlugin):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("change"):
                    self.puntuacion += 1  
-        print ('cantidad de puntuacion registrados',self.puntuacion)
         return 
 
     def finalize(self):
@@ -136,7 +136,9 @@ class Puntuacion(HairballPlugin):
         else:        
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
-        print (self.color,self.comentario)  
+        print (self.color)
+        print (self.comentario)
+        print (str(self.puntuacion))   
 
 class Acciones(HairballPlugin):
     """
@@ -155,7 +157,7 @@ class Acciones(HairballPlugin):
         super(Acciones, self).__init__()
         self.color = ""
         self.comentario = "" 
-        self.acciones
+        self.acciones = 0
 
     def analyze(self,scratch):
         """cuenta los bloques move"""
@@ -164,7 +166,6 @@ class Acciones(HairballPlugin):
             for name, _, _ in self.iter_blocks(script.blocks):
                 if not name.find("move"):
                    self.acciones += 1  
-        print ('cantidad de acciones registrados',self.acciones)
         return 
 
     def finalize(self):
@@ -180,7 +181,9 @@ class Acciones(HairballPlugin):
         else:        
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
-        print (self.color,self.comentario)  
+        print (self.color)
+        print (self.comentario)
+        print (str(self.acciones))    
 
 class Objetivo(HairballPlugin):
     """
@@ -200,17 +203,20 @@ class Objetivo(HairballPlugin):
         self.total = 0
         self.color = ""
         self.comentario = "" 
+        self.objetivo = 0
 
     def finalize(self):
         """Output whether the project seems to end or not."""
         if self.total > 0:
-            print "El juego persigue un Objetivo que lo finaliza"
+            self.objetivo = self.total
             self.color = "green"
             self.comentario = "Excelente"
         else:
-            print "El juego no tiene un Objetivo claro que lo culmina"
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
+        print (self.color)
+        print (self.comentario)
+        print (str(self.objetivo))      
 
     def analyze(self, scratch):
         """Run and return the results of the Ending plugin."""          
@@ -241,7 +247,7 @@ class Mecanica(HairballPlugin):
         self.actions = []
         self.color = ""
         self.comentario = "" 
-
+        self.mecanica = 0
 
     def finalize(self):
         """Output whether the project seems to have Mecanica instructions"""
@@ -249,13 +255,14 @@ class Mecanica(HairballPlugin):
             and len (self.spritesHidden) > 0
             and self.spritesShown >0
             and len(self.actions) > 0):
-            print "El juego parace tener instruciones al comienzo"
             self.color = "green"
             self.comentario = "Excelente"
         else:
-            print "El juego no parece tener instruciones al comienzo"
             self.color = "white"
             self.comentario = "No Encontrado o No aplica"
+        print (self.color)
+        print (self.comentario)
+        print (str(self.mecanica))      
 
     def backdropGreenFlag (self, all_scripts):
         """

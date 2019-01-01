@@ -6,6 +6,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
+import hairball
+import os
 
 from django.http import HttpResponse
 from django.template import loader
@@ -15,7 +17,38 @@ from .models import Pregunta
 # Create your views here.
 
 def perceptivos(request):
-    return render(request, 'encuestas/perceptivos.html')
+    album = {}
+    """ pasale el contexto o el output de criterios perceptivos a la vista para usarla en la plantilla """
+    comando = "hairball  -p perceptivos.Mecanica -p perceptivos.Dialogos -p perceptivos.Eventos -p perceptivos.Puntuacion -p perceptivos.Acciones -p perceptivos.Objetivo " + os.path.expanduser("~/Desktop/scratch")
+    resultado = os.popen(comando).read()
+    lineas = resultado.splitlines()
+    lineas.pop(0)
+    """agregando los criterios al contexto segun el mismo orden en el que se agrgan en el comando
+        mecanica dialogos eventos puntuacion acciones objetivo
+     """
+    contexto = { 'criterio1color' : lineas[0],
+                 'criterio1comen' : lineas[1],
+                 'criterio1canti' : lineas[2],
+                 'criterio2color' : "empty",
+                 'criterio2comen' : "empty",
+                 'criterio2canti' : "empty",
+                 'criterio3color' : lineas[3],
+                 'criterio3comen' : lineas[4],
+                 'criterio3canti' : lineas[5],
+                 'criterio4color' : lineas[6],
+                 'criterio4comen' : lineas[7],
+                 'criterio4canti' : lineas[8],
+                 'criterio5color' : lineas[9],
+                 'criterio5comen' : lineas[10],
+                 'criterio5canti' : lineas[11],
+                 'criterio6color' : lineas[12],
+                 'criterio6comen' : lineas[13],
+                 'criterio6canti' : lineas[14], 
+                 'criterio7color' : lineas[15],
+                 'criterio7comen' : lineas[16],
+                 'criterio7canti' : lineas[17],
+     }
+    return render(request, 'encuestas/perceptivos.html', contexto)
 
 def index(request):
     ultima_pregunta_lista = Pregunta.objects.order_by('-publicacionfecha')[:5]
