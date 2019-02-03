@@ -21,11 +21,12 @@ def perceptivos(request):
     """ pasale el contexto o el output de criterios perceptivos a la vista para usarla en la plantilla """
     comando = "hairball  -p perceptivos.Mecanica -p perceptivos.Dialogos -p perceptivos.Eventos -p perceptivos.Puntuacion -p perceptivos.Acciones -p perceptivos.Objetivo " + os.path.expanduser("~/Desktop/scratch")
     resultado = os.popen(comando).read()
+    """
     lineas = resultado.splitlines()
     lineas.pop(0)
-    """agregando los criterios al contexto segun el mismo orden en el que se agrgan en el comando
-        mecanica dialogos eventos puntuacion acciones objetivo
-     """
+    #agregando los criterios al contexto segun el mismo orden en el que se agrgan en el comando
+    #mecanica dialogos eventos puntuacion acciones objetivo
+    
     contexto = { 'criterio1color' : lineas[0],
                  'criterio1comen' : lineas[1],
                  'criterio1canti' : lineas[2],
@@ -47,8 +48,8 @@ def perceptivos(request):
                  'criterio7color' : lineas[15],
                  'criterio7comen' : lineas[16],
                  'criterio7canti' : lineas[17],
-     }
-    return render(request, 'encuestas/perceptivos.html', contexto)
+     }"""
+    return render(request, 'encuestas/perceptivos.html', resultado)
 
 def index(request):
     ultima_pregunta_lista = Pregunta.objects.order_by('-publicacionfecha')[:5]

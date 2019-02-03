@@ -13,6 +13,7 @@
   }
   
 
+
 table { 
     border-collapse: collapse;
     width: 100%; 
@@ -39,50 +40,49 @@ tr:hover {
     display: inline-block;
   }
 
-  .dot1 {
+  .dot1, .dot5 {
     background-color: yellow;
   }
 
-  .dot2 {
+  .dot2, .dot4, .dot6 {
     background-color: lightgreen;
   }
 
-  .dot3 {
+  .dot3, .dot7 {
     background-color: green;
   }
 
-  .dot4 {
-    background-color: grey;
-  }
 
   /* la tabla de los criterios analizados */
   .criterios {
-    position: relative;
-    width: 95%;
-    align-self: auto;
-    padding: 5px 10px;
+    position: fixed;
+    right: 25px;
+    bottom: 200px;
+    width: 670px;
+    padding: 5px;
     border: 2px solid yellow;
     border-radius: 3%;
-    margin-left: 1%;
-    margin-right: 1%;
-    margin-top: 3%;
   }
 
   /* la tabla de las mejores practicas*/
   .practicas {
-    position: relative;
+    position: fixed;
+    width: 500px;
+    bottom: 40px;
+    left: 25px;
     border: 2px solid yellow;
-    padding: 5px 10px;
+    padding: 5px;
     border-radius: 3%;
   }
 
   /* la tabla puntuacion */
   .puntuacion {
-    position: relative;
-    float: left;
+    position: fixed;
+    bottom: 40px;
+    left: 25;
+    width: 500px;
     border: 2px solid yellow;
-    padding: 5px 10px;
-    width: 55%;
+    padding: 5px;
     border-radius: 3%;
   }
 
@@ -93,20 +93,14 @@ tr:hover {
 
   /* la tabla de compartir*/
   .compartir{
-    position: relative;
-    float: right;
+    position: fixed;
+    bottom: 40px;
+    right: 25px;
+    width: 670px;
+    height: 100px;
     border: 2px solid yellow;
     padding: 5px;
-    width: 30%;
     border-radius: 3%;
-  }
-
-  /* aqui esta la configuracion de ambos el monito y la tabla tips*/
-  .ambos{
-    position: relative;
-    margin-top: 3%;
-    margin-left: 1%;
-    margin-right: 1%;
   }
 
   /* aqui esta la configuracion del footer*/
@@ -147,6 +141,8 @@ tr:hover {
   }
 
   #monito {
+    position: relative;
+    left: 15;
     top: 230;
     width: 150;
     height: 150;
